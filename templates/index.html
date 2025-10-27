@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Social Determinants of Health Indices Lookup by Address</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; margin: 40px auto; max-width: 960px; background: #f8f9fa;}
+        h1 { font-size: 1.7em; margin-bottom: 8px;}
+        .subtitle { color: #444; margin-bottom: 22px; font-size: 1em;}
+        form { margin-bottom: 2em;}
+        label { font-weight: bold; display: block;}
+        input[type="text"], select { width: 93%; padding: 11px; font-size: 1.08em; margin: 8px 0 16px 0; border-radius: 6px; border: 1px solid #bbb;}
+        select { width: 97%;}
+        input[type="submit"] { padding: 12px 36px; font-size: 1.12em; background: rgb(109, 172, 73); color: #fff; border: none; border-radius: 7px; transition: background 0.2s; cursor: pointer;}
+        input[type="submit"]:hover { background: rgb(85, 135, 57);}
+        .result, .error { margin-top: 28px; padding: 20px 22px; border-radius: 10px; font-size: 1.13em; box-shadow: 0 2px 8px #eee;}
+        .result { background: rgb(239, 204, 224); color: #333333; border: 1px solid #d896ba;}
+        .error  { background: #fff2f2; color: #d81a1a; border: 1px solid #fad2d2;}
+        .field { margin: 10px 0; }
+        .label { display: inline-block; width: 450px; font-weight: bold; white-space: nowrap;}
+        .loading { display: none; text-align: center; margin: 18px 0; color: rgb(109, 172, 73);}
+        .description { font-size: 0.9em; color: #555555; margin: 8px 0; line-height: 1.4;}
+        .result hr { border: 0; border-top: 1px solid #d896ba; }
+        .learn-more { display: inline-block; margin-top: 6px; padding: 6px 14px; font-size: 0.85em; background: rgb(109, 172, 73); color: #fff; text-decoration: none; border-radius: 4px; transition: background 0.2s;}
+        .learn-more:hover { background: rgb(85, 135, 57);}
+        @media (max-width: 900px) { .label { width: 300px; } }
+        @media (max-width: 700px) { .label { width: 200px; } }
+        @media (max-width: 600px) {
+            body { max-width: 98vw; margin: 8px; }
+            .label { display: block; width: 100%; margin-bottom: 4px; }
+            .field { margin: 15px 0; }
+        }
+    </style>
+    <script>
+        function showLoading() { document.getElementById('loading').style.display = 'block'; }
+        window.onload = function() { document.getElementById('street').focus(); };
+    </script>
+</head>
+<body>
+    <h1>Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
+    <div class="subtitle">
+        Enter any U.S. address to instantly view neighborhood-level Social Determinants of Health data, including the Social Deprivation Index (SDI), Social Vulnerability Index (SVI), Brokamp Area Deprivation Index (ADI) and Child Opportunity Index (COI) with key metrics.
+        Supports all 50 U.S. states and U.S. territories.
+    </div>
+    <form method="POST" onsubmit="showLoading();">
+        <label for="street">Street Address:</label>
+        <input type="text" name="street" id="street" placeholder="Street Address" required value="{{ request.form.street or '' }}">
+
+        <label for="city">City:</label>
+        <input type="text" name="city" id="city" placeholder="City" required value="{{ request.form.city or '' }}">
+
+        <label for="state">State / Territory:</label>
+        <select name="state" id="state" required>
+            <option value="">--Select--</option>
+            {% for abbr, name in states %}
+                <option value="{{ abbr }}" {% if request.form.state==abbr %}selected{% endif %}>{{ abbr }} - {{ name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="zip">ZIP Code:</label>
+        <input type="text" name="zip" id="zip" placeholder="ZIP code" maxlength="10" value="{{ request.form.zip or '' }}">
+
+        <input type="submit" value="Search">
+    </form>
+    <div class="loading" id="loading"> Searching... Please wait. </div>
+
+    {% if result or svi_data or adi_data or acs_data or acs_zip_data or coi_data %}
+    <div style="background: rgb(239, 204, 224); color: #333333; padding: 12px 22px; border-radius: 10px; margin-bottom: 15px; font-weight: 600;">
+        ✅ Address processed{% if result %}, Social Deprivation Index (SDI) Tract - FIPS: <b>{{ result.FIPS }}</b>{% endif %}.
+    </div>
+    <div class="result">
+
+        {% if result %}
+        <div style="font-weight:bold;margin-bottom:5px;">Social Deprivation Index (SDI)</div>
+        <div class="description">Measures socioeconomic variation in health outcomes at the census tract level based on income, education, employment, and housing quality.</div>
+        <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank" class="learn-more">Learn more</a>
+        <div class="field"><span class="label">SDI Score:</span> <b>{{ result.SDI_score }}</b></div>
+        <div class="field"><span class="label">SDI Category:</span> <b>{{ result.sdi }}</b></div>
+        {% endif %}
+
+        {% if acs_zip_data %}
+            <hr style="margin:16px 0;">
+            <div style="font-weight:bold;margin-bottom:5px;">Brokamp Area deprivation Index (ADI) by ZIP</div>
+            <div class="description">ZIP code-level deprivation index developed by Dr. Cole Brokamp, useful for areas where census tract data may be unavailable or less precise.</div>
+            <a href="https://geomarker.io/dep_index/" target="_blank" class="learn-more">Learn more</a>
+            <div class="field"><span class="label">Brokamp ADI:</span> <b>{{ acs_zip_data.Brokamp_ADI }}</b></div>
+        {% endif %}
+
+        {% if svi_data %}
+            <hr style="margin:16px 0;">
+            <div style="font-weight:bold;margin-bottom:5px;">Social Vulnerability Index (SVI)</div>
+            <div class="description">CDC index that identifies communities most vulnerable to disasters and public health emergencies using census data on socioeconomic status, household composition, and more.</div>
+            <a href="https://www.atsdr.cdc.gov/place-health/php/svi/index.html" target="_blank" class="learn-more">Learn more</a>
+            <div class="field"><span class="label">Poverty Percentile (EPL_POV150):</span> <b>{{ svi_data.EPL_POV150 }}</b></div>
+            <div class="field"><span class="label">Minority Percentile (EPL_MINRTY):</span> <b>{{ svi_data.EPL_MINRTY }}</b></div>
+            <div class="field"><span class="label">Sum SPL Themes (SPL_THEMES):</span> <b>{{ svi_data.SPL_THEMES }}</b></div>
+            <div class="field"><span class="label">Rank SPL Themes (RPL_THEMES):</span> <b>{{ svi_data.RPL_THEMES }}</b></div>
+        {% endif %}
+
+        {% if adi_data %}
+            <hr style="margin:16px 0;">
+            <div style="font-weight:bold;margin-bottom:5px;">Area Deprivation Index (ADI)</div>
+            <div class="description">Ranks neighborhoods by socioeconomic disadvantage using factors like income, education, employment, and housing quality to identify areas with health disparities.</div>
+            <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" class="learn-more">Learn more</a>
+            <div class="field"><span class="label">National Percentile (ADI_NATRANK):</span> <b>{{ adi_data.ADI_NATRANK }}</b></div>
+            <div class="field"><span class="label">State Decile (ADI_STATERNK):</span> <b>{{ adi_data.ADI_STATERNK }}</b></div>
+        {% endif %}
+
+        {% if coi_data %}
+            <hr style="margin:16px 0;">
+            <div style="font-weight:bold;margin-bottom:5px;">Child Opportunity Index (COI)</div>
+            <div class="description">Measures neighborhood conditions that matter for children's healthy development across education, health/environment, and social/economic domains.</div>
+            <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank" class="learn-more">Learn more</a>
+            <div class="field"><span class="label">COI (national):</span> <b>{{ coi_data.COI_national }}</b></div>
+            <div class="field"><span class="label">z-score (national):</span> <b>{{ coi_data.z_COI_national }}</b></div>
+            <div class="field"><span class="label">COI Education:</span> <b>{{ coi_data.COI_education }}</b></div>
+            <div class="field"><span class="label">z-score Education:</span> <b>{{ coi_data.z_COI_education }}</b></div>
+            <div class="field"><span class="label">COI Health/Environment:</span> <b>{{ coi_data.COI_health }}</b></div>
+            <div class="field"><span class="label">z-score Health/Env:</span> <b>{{ coi_data.z_COI_health }}</b></div>
+            <div class="field"><span class="label">COI Social/Economic:</span> <b>{{ coi_data.COI_social }}</b></div>
+            <div class="field"><span class="label">z-score Social/Econ:</span> <b>{{ coi_data.z_COI_social }}</b></div>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="error">
+            <b>Sorry:</b> {{ error }}<br>
+            <div style="margin-top:8px;">Check the address and try again.</div>
+        </div>
+    {% endif %}
+</body>
+</html>

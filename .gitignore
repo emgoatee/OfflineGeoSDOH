@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# PyInstaller
+build/
+dist/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+.codebuddy/
+
+# Data files (11GB - too large for git)
+# Consider using Git LFS or hosting separately
+data/
+
+# Logs
+*.log
