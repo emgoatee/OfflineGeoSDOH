@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# OfflineGeoLocator Launcher Script
+# This script starts the Flask server and opens the web interface
+
+# Get the directory where this script is located
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+RESOURCES_DIR="$DIR/../Resources"
+
+# Change to the Resources directory
+cd "$RESOURCES_DIR"
+
+# Create data directory if it doesn't exist
+mkdir -p data
+
+# Check if this is the first run (no data files)
+if [ ! -f "data/geodata.csv" ]; then
+    # Show welcome message
+    osascript -e 'display dialog "Welcome to OfflineGeoLocator!\n\nThis is your first time running the app. You need to download state data packages to use the geocoding features.\n\nThe state downloader will open in Terminal. Follow the prompts to download the states you need.\n\nAfter downloading states, close the Terminal window and launch the app again from Applications." buttons {"OK"} default button "OK" with title "OfflineGeoLocator - First Run"'
+
+    # Open Terminal and run the state downloader
+    osascript -e 'tell application "Terminal"
+        do script "cd '"'$RESOURCES_DIR'"' && python3 download_states.py && echo '\''
+
+State download complete!
+
+To launch the app:
+1. Close this Terminal window
+2. Open OfflineGeoLocator from Applications folder
+3. Your browser will open automatically'\'' && read -p '\''Press any key to exit...'\'' && exit"
+    end tell'
+
+    exit 0
+fi
+
+# Check if server is already running
+if lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+    # Server already running, just open browser
+    open "http://localhost:5001"
+    exit 0
+fi
+
+# Start the Flask server in the background
+./OfflineGeoLocator_executable > /tmp/offlinegeolocator.log 2>&1 &
+SERVER_PID=$!
+
+# Wait for server to start (max 10 seconds)
+for i in {1..20}; do
+    if lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+        break
+    fi
+    sleep 0.5
+done
+
+# Check if server started successfully
+if ! lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+    osascript -e 'display dialog "Failed to start OfflineGeoLocator server.\n\nCheck /tmp/offlinegeolocator.log for errors." buttons {"OK"} default button "OK" with title "OfflineGeoLocator Error" with icon stop'
+    exit 1
+fi
+
+# Open default browser to the app
+open "http://localhost:5001"
+
+# Show a notification
+osascript -e 'display notification "OfflineGeoLocator is running at http://localhost:5001" with title "OfflineGeoLocator Started"'
+
+# Keep the script running so the app stays in the Dock
+# When user quits from Dock, this will terminate and clean up the server
+trap "kill $SERVER_PID 2>/dev/null; exit 0" SIGINT SIGTERM
+
+wait $SERVER_PID

@@ -1,0 +1,46 @@
+OfflineGeoLocator Installation Instructions
+============================================
+
+IMPORTANT: macOS Security Notice
+---------------------------------
+
+When you first open the installer, macOS may show a warning:
+"OfflineGeoLocator-Installer-v1.0.1.pkg cannot be opened because it is from an unidentified developer."
+
+This is normal! The app is safe, but it's not code-signed with an Apple Developer certificate.
+
+HOW TO INSTALL:
+---------------
+
+Option 1 (Easiest):
+1. Right-click (or Control+click) on the .pkg file
+2. Select "Open" from the menu
+3. Click "Open" in the dialog that appears
+4. Follow the installation prompts
+
+Option 2:
+1. Go to System Preferences → Security & Privacy
+2. Click the lock icon to make changes
+3. Try opening the .pkg file again
+4. Look for a message about the blocked installer
+5. Click "Open Anyway"
+
+After Installation:
+-------------------
+1. Find OfflineGeoLocator in your Applications folder
+2. Right-click → Open (first time only)
+3. Follow the guided setup to download state data
+4. Browser will open automatically
+5. Start geocoding addresses!
+
+Why This Happens:
+-----------------
+macOS requires apps to be signed with an Apple Developer certificate ($99/year).
+This free app isn't signed, so macOS shows a security warning.
+
+The app is open-source and safe to use:
+https://github.com/emgoatee/OfflineGeoSDOH
+
+Questions or Issues?
+--------------------
+Visit: https://github.com/emgoatee/OfflineGeoSDOH/issues

@@ -20,18 +20,24 @@ A Mac application that performs **completely offline** geocoding of US addresses
 1. **Download the installer** from [Releases](https://github.com/emgoatee/OfflineGeoSDOH/releases/latest)
    - File: `OfflineGeoLocator-Installer-v1.0.1.pkg` (174MB)
 
-2. **Double-click to install**
-   - Installs to your Applications folder
-   - Works like any Mac app
+2. **Install the package**
+   - **Right-click** (or Control+click) on the `.pkg` file
+   - Select **"Open"** from the menu
+   - Click **"Open"** in the security dialog
+   - Follow the installation prompts
+   - *(macOS blocks unsigned apps by default - this is safe!)*
 
 3. **Launch and setup** (first time only)
-   - Open OfflineGeoLocator from Applications
+   - Find OfflineGeoLocator in Applications folder
+   - **Right-click → Open** (first time only)
    - Follow guided setup to download state data
    - Browser opens automatically
 
 4. **Start geocoding!**
    - Enter addresses and get health index data
    - Works 100% offline after initial setup
+
+> **Note:** You may see a security warning because this app isn't signed with an Apple Developer certificate. The app is [open-source](https://github.com/emgoatee/OfflineGeoSDOH) and safe to use. Use the right-click method above to bypass the warning.
 
 ### System Requirements
 
@@ -144,7 +150,7 @@ See [INSTALLER_GUIDE.md](INSTALLER_GUIDE.md) for detailed instructions on buildi
 
 ## License
 
-[Add your license here]
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Credits
 
