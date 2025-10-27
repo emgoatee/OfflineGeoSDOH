@@ -1,147 +1,146 @@
 # OfflineGeoLocator
 
-A Flask web application that performs offline geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices.
+A Mac application that performs **completely offline** geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices.
+
+🎉 **New: Easy one-click installer package!**
 
 ## Features
 
-- **Offline Geocoding**: Convert US street addresses to coordinates using Census TIGER/Line shapefiles
-- **Multiple Health Indices**: Retrieve SDI, SVI, ADI, Brokamp ADI, and COI data
-- **Modular State Packages**: Download only the states you need (~200-500MB each)
-- **All 50 States + Territories**: Supports all US states and territories
-- **Standalone Application**: Packaged as executable for Mac and Windows
+- ✅ **100% Offline Operation**: Works without internet after initial setup
+- ✅ **Offline Geocoding**: Convert US street addresses to coordinates using Census TIGER/Line shapefiles
+- ✅ **Multiple Health Indices**: Retrieve SDI, SVI, ADI, Brokamp ADI, and COI data
+- ✅ **Modular State Packages**: Download only the states you need (29KB - 201MB each)
+- ✅ **All 50 States + Territories**: Supports all US states and territories
+- ✅ **Easy Installation**: One-click Mac installer, installs like any Mac app
 
-## Development
+## Installation (For Users)
 
-### Setup
+### Quick Start - Mac Installer (Recommended)
+
+1. **Download the installer** from [Releases](https://github.com/emgoatee/OfflineGeoSDOH/releases/latest)
+   - File: `OfflineGeoLocator-Installer-v1.0.1.pkg` (174MB)
+
+2. **Double-click to install**
+   - Installs to your Applications folder
+   - Works like any Mac app
+
+3. **Launch and setup** (first time only)
+   - Open OfflineGeoLocator from Applications
+   - Follow guided setup to download state data
+   - Browser opens automatically
+
+4. **Start geocoding!**
+   - Enter addresses and get health index data
+   - Works 100% offline after initial setup
+
+### System Requirements
+
+- **macOS 10.13 (High Sierra) or later**
+- **500MB disk space** (core app)
+- **Additional space for states** (varies: 29KB - 201MB per state)
+- **Internet connection** (for initial install and state downloads only)
+
+### What Happens on First Launch
+
+1. Welcome dialog explains state download needed
+2. Terminal opens with interactive state downloader
+3. Select which states you need (or download all)
+4. Browser opens automatically to http://localhost:5001
+5. App is ready to use offline!
+
+### File Sizes
+
+- **Installer**: 174MB (one-time download)
+- **Core Data**: 112MB (required, downloads automatically)
+- **Each State**: 29KB - 201MB (varies by state size)
+- **Minimum Setup**: ~286MB (installer + core data, no states yet)
+- **Example**: Core + OH + PA + NY ≈ 750MB
+- **Full Install**: ~3.4GB (all 56 states/territories)
+
+**You only download what you need!**
+
+## How It Works
+
+### Completely Offline
+
+After initial setup, OfflineGeoLocator works **100% offline**:
+
+✅ **Geocoding** (address → coordinates) - Uses local Census TIGER/Line shapefiles
+✅ **Census tract lookup** - Uses local boundary data
+✅ **Health index retrieval** - Uses local CSV files
+✅ **Web interface** - Runs on your computer (localhost)
+
+**Perfect for:**
+- Remote locations without internet
+- Air-gapped networks
+- Privacy-sensitive work
+- Traveling
+- Reliable offline research
+
+### Health Indices Provided
+
+1. **Social Deprivation Index (SDI)** - Census tract-level socioeconomic measure
+2. **Social Vulnerability Index (SVI)** - CDC measure of community resilience
+3. **Area Deprivation Index (ADI)** - Neighborhood disadvantage measure
+4. **Brokamp Area Deprivation Index** - ZIP code-level disadvantage measure
+5. **Child Opportunity Index (COI)** - Neighborhood resources for children
+
+## Using the Application
+
+1. Launch OfflineGeoLocator from Applications
+2. Browser opens to http://localhost:5001
+3. Enter a US street address
+4. Select state from dropdown (only shows downloaded states)
+5. Click "Geocode Address"
+6. View comprehensive health index results
+
+### Supported Locations
+
+All 50 US states plus:
+- District of Columbia (DC)
+- Puerto Rico (PR)
+- American Samoa (AS)
+- Guam (GU)
+- Northern Mariana Islands (MP)
+- US Virgin Islands (VI)
+
+## For Developers
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for build and deployment instructions.
+
+### Development Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/emgoatee/OfflineGeoSDOH.git
+cd OfflineGeoSDOH
+
 # Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the application
+# Run development server
 python app.py
 ```
 
 The application will be available at http://localhost:5001
 
-### Building Executables
-
-#### Local Build
-
-```bash
-# Install PyInstaller
-pip install pyinstaller
-
-# Build executable
-pyinstaller OfflineGeoLocator.spec
-```
-
-The executable will be in the `dist/` directory.
-
-#### Automated Builds with GitHub Actions
-
-This project uses GitHub Actions to automatically build executables for both Mac and Windows.
-
-**To trigger a build:**
-
-1. **Push a version tag:**
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
-
-2. **Or manually trigger:**
-   - Go to GitHub Actions tab
-   - Select "Build Executables" workflow
-   - Click "Run workflow"
-
-**Built executables will be:**
-- Attached as artifacts to the workflow run (available for 90 days)
-- Attached to the GitHub Release (if triggered by a tag)
-
-## Handling Large Data Files (11GB)
-
-The `data/` folder contains 11GB of Census TIGER/Line shapefiles and is excluded from git. You have several options:
-
-### Option 1: Git LFS (Recommended for GitHub)
-
-```bash
-# Install Git LFS
-# macOS: brew install git-lfs
-# Windows: Download from https://git-lfs.github.com
-
-# Initialize Git LFS
-git lfs install
-
-# Track the data folder
-git lfs track "data/**"
-git add .gitattributes
-git add data/
-git commit -m "Add data files with Git LFS"
-git push
-```
-
-**Note:** GitHub has LFS storage limits. Free accounts get 1GB storage/month bandwidth.
-
-### Option 2: External Hosting
-
-Upload the `data/` folder to:
-- AWS S3
-- Google Cloud Storage
-- Dropbox/Google Drive
-
-Then update the GitHub Actions workflow to download it during builds.
-
-### Option 3: Manual Distribution
-
-1. Build locally (since you have the data folder)
-2. Manually upload executables to GitHub Releases
-3. Share download links with users
-
-## Application Structure
+### Project Structure
 
 - `app.py` - Main Flask application with geocoding logic
 - `templates/index.html` - Web interface
-- `data/` - Census shapefiles and health index data (11GB)
-- `OfflineGeoLocator.spec` - PyInstaller configuration
-- `.github/workflows/build.yml` - GitHub Actions workflow
+- `data/` - Census shapefiles and health index CSV files (excluded from git)
+- `package_states.py` - Script to create state packages
+- `download_states.py` - User utility to download states
+- `OfflineGeoLocator_core.spec` - PyInstaller configuration
+- `installer/` - Mac .app bundle and installer components
 
-## For Users
+### Building the Installer
 
-### Installation
-
-1. **Download the Core App**
-   - Download `OfflineGeoLocator-Core-macOS.zip` or `OfflineGeoLocator-Core-Windows.zip` from [Releases](https://github.com/emgoatee/OfflineGeoSDOH/releases)
-   - Extract the ZIP file
-
-2. **Download State Packages**
-   - Download state packages for the states you need (e.g., `state_OH.zip`, `state_CA.zip`)
-   - Extract state ZIP files into the `data/` folder next to the executable
-
-   **OR** use the built-in downloader:
-   ```bash
-   # Run the state downloader utility
-   python download_states.py
-
-   # Follow the interactive prompts to download states
-   ```
-
-3. **Run the Application**
-   - Double-click the executable or run it from terminal
-   - Open http://localhost:5001 in your web browser
-   - Enter a US address to get health index data
-
-### File Sizes
-
-- **Core App**: ~200-500 MB (includes all health index CSV data, no state shapefiles)
-- **Each State Package**: ~200-500 MB (varies by state population density)
-- **Example**: Core + Ohio + Pennsylvania + New York ≈ 1.5-2 GB total
-
-This modular approach means you don't need to download all 11GB of data - just download the states you actually use!
+See [INSTALLER_GUIDE.md](INSTALLER_GUIDE.md) for detailed instructions on building the Mac installer package.
 
 ## License
 
