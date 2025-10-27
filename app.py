@@ -83,8 +83,9 @@ coi_df['GEOID'] = coi_df['GEOID'].astype(str).str.zfill(11)
 
 # ----------- Tract files (state-level)
 app = Flask(__name__)
-print("Loading all state and territory tract shapefiles. This may take a while...")
+print("Loading available state and territory tract shapefiles...")
 gdfs_tracts = {}
+available_states = []
 for fips, abbr in STATE_FIPS.items():
     shape_base = f"tl_2022_{fips}_tract"
     shp_path = resource_path(f"data/{shape_base}.shp")
@@ -93,9 +94,11 @@ for fips, abbr in STATE_FIPS.items():
         gdf = gpd.read_file(shp_path)
         gdf['GEOID'] = gdf['GEOID'].astype(str)
         gdfs_tracts[abbr] = gdf
+        available_states.append((abbr, abbr))
     else:
         print(f"  {abbr} tract shapefile not found, skipping.")
 print(f"Loaded {len(gdfs_tracts)} states/territories.")
+print(f"Available states: {', '.join([s[0] for s in available_states])}")
 
 # ----------- Offline Address Geocoder (county-based addrfeat search)
 def offline_geocode(street, zip_code, state_abbr):
@@ -266,7 +269,7 @@ def index():
         error=error,
         geoid=geoid,
         state_abbr=state_abbr,
-        states=STATE_NAMES,
+        states=available_states,
         svi_data=svi_data,
         adi_data=adi_data,
         acs_data=acs_data,

@@ -6,8 +6,9 @@ A Flask web application that performs offline geocoding of US addresses and retr
 
 - **Offline Geocoding**: Convert US street addresses to coordinates using Census TIGER/Line shapefiles
 - **Multiple Health Indices**: Retrieve SDI, SVI, ADI, Brokamp ADI, and COI data
+- **Modular State Packages**: Download only the states you need (~200-500MB each)
 - **All 50 States + Territories**: Supports all US states and territories
-- **Standalone Application**: Can be packaged as a standalone executable for Mac and Windows
+- **Standalone Application**: Packaged as executable for Mac and Windows
 
 ## Development
 
@@ -111,11 +112,36 @@ Then update the GitHub Actions workflow to download it during builds.
 
 ## For Users
 
-1. Download the executable for your operating system from Releases
-2. Extract the ZIP file
-3. Run the executable
-4. Open http://localhost:5001 in your web browser
-5. Enter a US address to get health index data
+### Installation
+
+1. **Download the Core App**
+   - Download `OfflineGeoLocator-Core-macOS.zip` or `OfflineGeoLocator-Core-Windows.zip` from [Releases](https://github.com/emgoatee/OfflineGeoSDOH/releases)
+   - Extract the ZIP file
+
+2. **Download State Packages**
+   - Download state packages for the states you need (e.g., `state_OH.zip`, `state_CA.zip`)
+   - Extract state ZIP files into the `data/` folder next to the executable
+
+   **OR** use the built-in downloader:
+   ```bash
+   # Run the state downloader utility
+   python download_states.py
+
+   # Follow the interactive prompts to download states
+   ```
+
+3. **Run the Application**
+   - Double-click the executable or run it from terminal
+   - Open http://localhost:5001 in your web browser
+   - Enter a US address to get health index data
+
+### File Sizes
+
+- **Core App**: ~200-500 MB (includes all health index CSV data, no state shapefiles)
+- **Each State Package**: ~200-500 MB (varies by state population density)
+- **Example**: Core + Ohio + Pennsylvania + New York ≈ 1.5-2 GB total
+
+This modular approach means you don't need to download all 11GB of data - just download the states you actually use!
 
 ## License
 
