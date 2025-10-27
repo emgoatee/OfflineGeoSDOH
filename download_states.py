@@ -75,12 +75,14 @@ STATE_FIPS = {
 
 def get_data_dir():
     """Get the data directory path (handles both dev and frozen app)."""
-    if getattr(sys, 'frozen', False):
-        # Running as compiled executable
-        return os.path.join(sys._MEIPASS, 'data')
-    else:
-        # Running as script
-        return os.path.join(os.path.dirname(__file__), 'data')
+    # When running from installed .app, use the Resources/data directory
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(script_dir, 'data')
+
+    # Make sure it exists
+    os.makedirs(data_dir, exist_ok=True)
+
+    return data_dir
 
 def check_installed_states():
     """Check which states are already installed."""
@@ -101,12 +103,18 @@ def download_state(state_abbr, version=DEFAULT_VERSION):
     url = f"{GITHUB_RELEASE_URL}/{version}/state_{state_abbr}.zip"
     data_dir = get_data_dir()
 
+    # Ensure data directory exists and is writable
+    os.makedirs(data_dir, exist_ok=True)
+
     print(f"\nDownloading {state_abbr}...")
     print(f"URL: {url}")
 
     try:
-        # Download the file
-        zip_path = f"state_{state_abbr}.zip"
+        # Download to temp directory to avoid permission issues
+        import tempfile
+        temp_dir = tempfile.gettempdir()
+        zip_path = os.path.join(temp_dir, f"state_{state_abbr}.zip")
+
         urllib.request.urlretrieve(url, zip_path)
 
         # Extract to data directory
