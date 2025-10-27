@@ -12,7 +12,7 @@ from pathlib import Path
 
 # Replace with your actual GitHub release URL
 GITHUB_RELEASE_URL = "https://github.com/emgoatee/OfflineGeoSDOH/releases/download"
-DEFAULT_VERSION = "v1.0.0"
+DEFAULT_VERSION = "v1.0.3"
 
 STATE_FIPS = {
     '01': 'AL - Alabama',
