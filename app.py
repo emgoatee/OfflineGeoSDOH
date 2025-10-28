@@ -255,10 +255,32 @@ def lookup_coi(tract_fips, df):
 @app.route('/')
 def welcome():
     """Welcome page with options to check address or download states."""
-    states_list = ', '.join([s[0] for s in available_states])
+    # Check which states have addrfeat files downloaded
+    downloaded_states = []
+    user_data_dir = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", "data")
+
+    for fips, abbr in STATE_FIPS.items():
+        # Check both Application Support and local data directory
+        has_files = False
+        if os.path.exists(user_data_dir):
+            pattern = os.path.join(user_data_dir, f"tl_2022_{fips}*_addrfeat.shp")
+            if glob.glob(pattern):
+                has_files = True
+
+        if not has_files:
+            pattern = resource_path(f"data/tl_2022_{fips}*_addrfeat.shp")
+            if glob.glob(pattern):
+                has_files = True
+
+        if has_files and abbr in [s[0] for s in available_states]:
+            downloaded_states.append(abbr)
+
+    downloaded_states.sort()
+    states_list = ', '.join(downloaded_states)
+
     return render_template(
         "welcome.html",
-        state_count=len(available_states),
+        state_count=len(downloaded_states),
         states_list=states_list
     )
 
