@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OfflineGeoLocator - Welcome</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 40px auto;
+            max-width: 800px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 16px;
+            color: rgb(109, 172, 73);
+        }
+        .subtitle {
+            color: #555;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .button-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 50px 0;
+        }
+        .main-button {
+            flex: 1;
+            max-width: 300px;
+            padding: 40px 30px;
+            background: white;
+            border: 2px solid rgb(109, 172, 73);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .main-button:hover {
+            background: rgb(109, 172, 73);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(109, 172, 73, 0.4);
+        }
+        .button-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        .button-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .button-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .main-button:hover .button-description {
+            color: rgba(255,255,255,0.9);
+        }
+        .states-info {
+            margin-top: 60px;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .states-info h2 {
+            color: rgb(109, 172, 73);
+            margin-bottom: 15px;
+        }
+        .states-list {
+            color: #555;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+        .state-count {
+            font-weight: 700;
+            color: rgb(109, 172, 73);
+            font-size: 1.2em;
+        }
+        @media (max-width: 700px) {
+            .button-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .main-button {
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>OfflineGeoLocator</h1>
+    <div class="subtitle">
+        Offline geocoding and Social Determinants of Health (SDOH) indices lookup for U.S. addresses
+    </div>
+
+    <div class="button-container">
+        <a href="/geocode" class="main-button">
+            <div class="button-icon">📍</div>
+            <div class="button-title">Check Address</div>
+            <div class="button-description">Look up SDOH indices for any U.S. address</div>
+        </a>
+
+        <a href="/download" class="main-button">
+            <div class="button-icon">⬇️</div>
+            <div class="button-title">Download States</div>
+            <div class="button-description">Add more state data packages to your installation</div>
+        </a>
+    </div>
+
+    <div class="states-info">
+        <h2>Available States</h2>
+        <p class="state-count">{{ state_count }} states/territories installed</p>
+        <div class="states-list">
+            {{ states_list }}
+        </div>
+    </div>
+</body>
+</html>

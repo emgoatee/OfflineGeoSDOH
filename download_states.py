@@ -75,9 +75,9 @@ STATE_FIPS = {
 
 def get_data_dir():
     """Get the data directory path (handles both dev and frozen app)."""
-    # When running from installed .app, use the Resources/data directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(script_dir, 'data')
+    # Use user's home directory to avoid permission issues with /Applications
+    home_dir = os.path.expanduser("~")
+    data_dir = os.path.join(home_dir, "Library", "Application Support", "OfflineGeoLocator", "data")
 
     # Make sure it exists
     os.makedirs(data_dir, exist_ok=True)

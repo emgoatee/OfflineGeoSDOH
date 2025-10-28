@@ -9,6 +9,13 @@ import sys
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller."""
+    # For data files, check user's Application Support folder first
+    if relative_path.startswith("data/"):
+        user_data_path = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", relative_path)
+        if os.path.exists(user_data_path):
+            return user_data_path
+
+    # Fall back to bundled resources
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
@@ -103,22 +110,46 @@ print(f"Available states: {', '.join([s[0] for s in available_states])}")
 # ----------- Offline Address Geocoder (county-based addrfeat search)
 def offline_geocode(street, zip_code, state_abbr):
     state_fips = STATE_ABBR_TO_FIPS[state_abbr]
-    pattern = resource_path(f"data/tl_2022_{state_fips}*_addrfeat.shp")
-    files = glob.glob(pattern)
+    files = []
+
+    # Try Application Support folder first, then fall back to bundled/local
+    user_data_dir = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", "data")
+    if os.path.exists(user_data_dir):
+        pattern = os.path.join(user_data_dir, f"tl_2022_{state_fips}*_addrfeat.shp")
+        files = glob.glob(pattern)
+        print(f"[DEBUG] Checked Application Support: {len(files)} files found with pattern {pattern}", flush=True)
+        if files:
+            print(f"Using Application Support data: {len(files)} addrfeat files found", flush=True)
+
+    # Fallback to bundled/local data
     if not files:
-        print(f"No addrfeat files found for {state_abbr} (pattern: {pattern})")
+        pattern = resource_path(f"data/tl_2022_{state_fips}*_addrfeat.shp")
+        files = glob.glob(pattern)
+        print(f"[DEBUG] Checked local data: {len(files)} files found with pattern {pattern}", flush=True)
+
+    if not files:
+        print(f"No addrfeat files found for {state_abbr} (pattern: {pattern})", flush=True)
         return None, None
     number, name = parse_street(street)
+    print(f"[DEBUG] Parsed address: number={number}, name='{name}'", flush=True)
+    if number is None or name is None:
+        print(f"[DEBUG] Address parsing failed!", flush=True)
+        return None, None
+
     for f in files:
         addr_gdf = gpd.read_file(f)
         addr_gdf["NAME_clean"] = addr_gdf["FULLNAME"].apply(clean_street_name)
         LFROM, LTO, RFROM, RTO = get_addr_range_cols(addr_gdf)
         candidates = addr_gdf[addr_gdf["NAME_clean"] == name]
+        if len(candidates) > 0:
+            print(f"[DEBUG] Found {len(candidates)} street name matches in {f}", flush=True)
         if zip_code:
             zip_candidates = candidates[
                 (candidates["ZIPL"].astype(str) == str(zip_code)) |
                 (candidates["ZIPR"].astype(str) == str(zip_code))
             ]
+            if len(zip_candidates) > 0:
+                print(f"[DEBUG] Found {len(zip_candidates)} matches with ZIP {zip_code}", flush=True)
         else:
             zip_candidates = candidates
         if not zip_candidates.empty:
@@ -220,9 +251,19 @@ def lookup_coi(tract_fips, df):
             }
     return None
 
-# ----------- Flask route
-@app.route('/', methods=["GET", "POST"])
-def index():
+# ----------- Flask routes
+@app.route('/')
+def welcome():
+    """Welcome page with options to check address or download states."""
+    states_list = ', '.join([s[0] for s in available_states])
+    return render_template(
+        "welcome.html",
+        state_count=len(available_states),
+        states_list=states_list
+    )
+
+@app.route('/geocode', methods=["GET", "POST"])
+def geocode():
     result = error = geoid = state_abbr = None
     svi_data = adi_data = acs_data = acs_zip_data = coi_data = None
 
@@ -236,7 +277,9 @@ def index():
         elif not street or not zip_code:
             error = "Please enter both a street address and ZIP code."
         else:
+            print(f"[GEOCODE] Attempting to geocode: '{street}', ZIP: {zip_code}, State: {state}", flush=True)
             lon, lat = offline_geocode(street, zip_code, state)
+            print(f"[GEOCODE] Result: lon={lon}, lat={lat}", flush=True)
             if lon is None or lat is None:
                 error = "Could not match that address. Please check the spelling and number."
             else:
@@ -276,6 +319,56 @@ def index():
         acs_zip_data=acs_zip_data,
         coi_data=coi_data
     )
+
+@app.route('/download')
+def download():
+    """Launch the state download utility in Terminal."""
+    import subprocess
+    # Get the path to download_states.py
+    download_script = resource_path("download_states.py")
+
+    # Launch Terminal with the download script
+    if sys.platform == 'darwin':  # macOS
+        # Use osascript to open Terminal and run the script
+        script = f'''
+tell application "Terminal"
+    activate
+    do script "cd '{os.path.dirname(download_script)}' && python3 download_states.py && echo '
+
+Download complete!
+
+Close this window and refresh the OfflineGeoLocator welcome page to see your new states.' && read -p 'Press Enter to close...'"
+end tell
+'''
+        subprocess.Popen(['osascript', '-e', script])
+    else:
+        # For other platforms, just run it in the background
+        subprocess.Popen(['python3', download_script])
+
+    return '''
+    <html>
+    <head>
+        <title>Launching Download Utility</title>
+        <meta http-equiv="refresh" content="3;url=/">
+        <style>
+            body {
+                font-family: 'Montserrat', sans-serif;
+                text-align: center;
+                margin-top: 100px;
+                background: #f8f9fa;
+            }
+            h1 { color: rgb(109, 172, 73); }
+            p { font-size: 1.2em; color: #555; }
+        </style>
+    </head>
+    <body>
+        <h1>Launching Download Utility...</h1>
+        <p>The Terminal window will open shortly.</p>
+        <p>Redirecting back to welcome page in 3 seconds...</p>
+        <p><a href="/">Return to welcome page now</a></p>
+    </body>
+    </html>
+    '''
 
 if __name__ == "__main__":
     if getattr(sys, 'frozen', False):
