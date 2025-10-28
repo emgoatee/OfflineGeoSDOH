@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <title>OfflineGeoLocator</title>
+    <welcome file="Welcome.txt"/>
+    <pkg-ref id="com.offlinegeolocator.app"/>
+    <options customize="never" require-scripts="false" hostArchitectures="arm64,x86_64"/>
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.offlinegeolocator.app"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="com.offlinegeolocator.app" visible="false">
+        <pkg-ref id="com.offlinegeolocator.app"/>
+    </choice>
+    <pkg-ref id="com.offlinegeolocator.app" version="1.0.6" onConclusion="none">OfflineGeoLocator-Component-v1.0.6.pkg</pkg-ref>
+</installer-gui-script>

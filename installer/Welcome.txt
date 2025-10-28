@@ -1,0 +1,38 @@
+Welcome to OfflineGeoLocator v1.0.0
+
+This installer will install OfflineGeoLocator to your Applications folder.
+
+WHAT IS OFFLINEGEOLOCATOR?
+--------------------------
+OfflineGeoLocator is a desktop application that performs offline geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices including:
+
+• Social Deprivation Index (SDI)
+• Social Vulnerability Index (SVI)
+• Area Deprivation Index (ADI)
+• Brokamp Area Deprivation Index
+• Child Opportunity Index (COI)
+
+FIRST-TIME SETUP
+----------------
+When you first launch OfflineGeoLocator, you'll need to download state data packages:
+
+1. The app will prompt you to download states
+2. A Terminal window will open with the state downloader
+3. Follow the prompts to select which states you need
+4. The app will automatically open in your browser when ready
+
+SYSTEM REQUIREMENTS
+-------------------
+• macOS 10.13 or later
+• 500MB free disk space (core app only)
+• Additional space for state packages (varies by state)
+• Python 3 (included with macOS)
+
+AFTER INSTALLATION
+------------------
+Find OfflineGeoLocator in your Applications folder and double-click to launch.
+
+The app will open in your default web browser at http://localhost:5001
+
+For more information, visit:
+https://github.com/emgoatee/OfflineGeoSDOH
