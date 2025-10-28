@@ -18,7 +18,7 @@ A Mac application that performs **completely offline** geocoding of US addresses
 ### Quick Start - Mac Installer (Recommended)
 
 1. **Download the installer** from [Releases](https://github.com/emgoatee/OfflineGeoSDOH/releases/latest)
-   - File: `OfflineGeoLocator-Installer-v1.0.1.pkg` (174MB)
+   - File: `OfflineGeoLocator-Installer-v1.0.0.pkg`
 
 2. **Install the package**
    - **Right-click** (or Control+click) on the `.pkg` file
