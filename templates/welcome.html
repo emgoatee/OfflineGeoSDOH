@@ -99,6 +99,62 @@
         }
 
         /* ============================================
+           INDICES SECTION - Available health indices
+           ============================================ */
+        .indices-section {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(184, 164, 212, 0.15);
+        }
+
+        .indices-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-plum);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .indices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .index-item {
+            background: var(--bg-off-white);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent-pink);
+            transition: all 0.2s ease;
+        }
+
+        .index-item:hover {
+            background: white;
+            border-left-color: var(--primary-plum);
+            transform: translateX(4px);
+            box-shadow: 0 2px 6px rgba(139, 123, 168, 0.1);
+        }
+
+        .index-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .index-abbreviation {
+            font-size: 0.75rem;
+            color: var(--slate-medium);
+            font-weight: 500;
+        }
+
+        /* ============================================
            ACTION CARDS - Primary and secondary CTAs
            ============================================ */
         .action-cards {
@@ -335,6 +391,14 @@
                 padding: 2rem 1.5rem;
             }
 
+            .indices-section {
+                padding: 1.5rem;
+            }
+
+            .indices-grid {
+                grid-template-columns: 1fr;
+            }
+
             .status-panel {
                 padding: 1.5rem;
             }
@@ -376,6 +440,29 @@
                 Look up any U.S. address to view data on the neighborhood's social and economic conditions, available nationwide across all states and territories.
             </p>
         </header>
+
+        <!-- AVAILABLE INDICES -->
+        <section class="indices-section">
+            <h2 class="indices-title">Available Indices</h2>
+            <div class="indices-grid">
+                <div class="index-item">
+                    <div class="index-name">Social Deprivation Index</div>
+                    <div class="index-abbreviation">SDI</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-name">Social Vulnerability Index</div>
+                    <div class="index-abbreviation">SVI</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-name">Brokamp Area Deprivation Index</div>
+                    <div class="index-abbreviation">ADI</div>
+                </div>
+                <div class="index-item">
+                    <div class="index-name">Child Opportunity Index</div>
+                    <div class="index-abbreviation">COI</div>
+                </div>
+            </div>
+        </section>
 
         <!-- ACTION CARDS -->
         <section class="action-cards">
