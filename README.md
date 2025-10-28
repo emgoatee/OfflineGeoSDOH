@@ -1,4 +1,4 @@
-# OfflineGeoLocator
+# Offline Geo SDOH Match
 
 A Mac application that performs **completely offline** geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices.
 
