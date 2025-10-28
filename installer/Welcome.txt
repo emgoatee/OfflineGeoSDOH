@@ -1,10 +1,10 @@
-Welcome to OfflineGeoLocator v1.0.0
+Welcome to Offline GEO-SDOH v1.0.0
 
-This installer will install OfflineGeoLocator to your Applications folder.
+This installer will install Offline GEO-SDOH to your Applications folder.
 
-WHAT IS OFFLINEGEOLOCATOR?
---------------------------
-OfflineGeoLocator is a desktop application that performs offline geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices including:
+WHAT IS OFFLINE GEO-SDOH?
+-------------------------
+Offline GEO-SDOH is a desktop application that performs offline geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices including:
 
 • Social Deprivation Index (SDI)
 • Social Vulnerability Index (SVI)
@@ -14,7 +14,7 @@ OfflineGeoLocator is a desktop application that performs offline geocoding of US
 
 FIRST-TIME SETUP
 ----------------
-When you first launch OfflineGeoLocator, you'll need to download state data packages:
+When you first launch Offline GEO-SDOH, you'll need to download state data packages:
 
 1. The app will prompt you to download states
 2. A Terminal window will open with the state downloader
@@ -30,7 +30,7 @@ SYSTEM REQUIREMENTS
 
 AFTER INSTALLATION
 ------------------
-Find OfflineGeoLocator in your Applications folder and double-click to launch.
+Find Offline GEO-SDOH in your Applications folder and double-click to launch.
 
 The app will open in your default web browser at http://localhost:5001
 

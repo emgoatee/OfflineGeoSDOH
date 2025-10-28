@@ -11,7 +11,7 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>OfflineGeoLocator</string>
+    <string>Offline GEO-SDOH</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -23,7 +23,7 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>CFBundleDisplayName</key>
-    <string>OfflineGeoLocator</string>
+    <string>Offline GEO-SDOH</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
 </dict>
