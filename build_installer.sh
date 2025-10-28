@@ -1,19 +1,19 @@
 #!/bin/bash
 set -e
 
-echo "Building OfflineGeoLocator v1.0.0 Installer"
+echo "Building Offline GEO-SDOH v1.0.0 Installer"
 echo "==========================================="
 echo ""
 
 VERSION="1.0.0"
-APP_NAME="OfflineGeoLocator"
+APP_NAME="Offline GEO-SDOH"
 BUNDLE_ID="com.offlinegeolocator.app"
 
 # Paths
 APP_PATH="installer/${APP_NAME}.app"
-COMPONENT_PKG="installer/${APP_NAME}-Component-v${VERSION}.pkg"
+COMPONENT_PKG="installer/OfflineGeoLocator-Component-v${VERSION}.pkg"
 DIST_XML="installer/Distribution.xml"
-FINAL_PKG="${APP_NAME}-Installer-v${VERSION}.pkg"
+FINAL_PKG="OfflineGeoLocator-Installer-v${VERSION}.pkg"
 
 # Check that app bundle exists
 if [ ! -d "$APP_PATH" ]; then
