@@ -57,6 +57,11 @@
             max-width: 920px;
             width: 100%;
             animation: fadeIn 0.6s ease-in;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
+            box-shadow: 0 8px 32px rgba(139, 123, 168, 0.12);
         }
 
         @keyframes fadeIn {
@@ -418,15 +423,17 @@
             font-size: 0.85rem;
             font-weight: 600;
             border: 1.5px solid var(--primary-lavender);
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             box-shadow: 0 1px 3px rgba(139, 123, 168, 0.1);
+            cursor: default;
         }
 
         .state-badge:hover {
-            background: var(--primary-lavender);
+            background: linear-gradient(135deg, var(--primary-lavender), var(--accent-pink));
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 6px rgba(139, 123, 168, 0.2);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(184, 164, 212, 0.4);
+            border-color: transparent;
         }
 
         .empty-state {
@@ -436,12 +443,19 @@
             text-align: center;
         }
 
+        .status-description {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--slate-medium);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
         .helper-text {
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: var(--slate-light);
             margin-top: 1rem;
-            font-style: italic;
         }
 
         .helper-text a {
@@ -461,6 +475,10 @@
         @media (max-width: 768px) {
             body {
                 padding: 1.5rem 1rem;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
             }
 
             .title {
@@ -513,6 +531,10 @@
         }
 
         @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
             .title {
                 font-size: 1.5rem;
             }
@@ -596,6 +618,7 @@
                     <span class="status-label">States Ready</span>
                 </div>
             </div>
+            <p class="status-description">These states are currently available for lookup.</p>
             <div class="states-list">
                 {% if state_count > 0 %}
                     {% for state in states_list.split(', ') %}
