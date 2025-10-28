@@ -104,29 +104,40 @@
         }
 
         /* ============================================
+           MAIN CONTENT GRID - Two column layout
+           ============================================ */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* ============================================
            INDICES SECTION - Info pills with hover tooltips
            ============================================ */
         .indices-section {
-            padding: 0 1rem;
-            margin-bottom: 2.5rem;
-            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(184, 164, 212, 0.2);
         }
 
         .indices-title {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--slate-medium);
+            color: var(--primary-plum);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
         .indices-pills {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.75rem;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         .index-pill {
@@ -222,11 +233,10 @@
         /* ============================================
            ACTION CARDS - Primary and secondary CTAs
            ============================================ */
-        .action-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+        .action-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .action-card {
@@ -489,40 +499,18 @@
                 font-size: 0.95rem;
             }
 
-            .action-cards {
+            /* Stack columns on mobile */
+            .main-content {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
 
             .action-card {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
             }
 
             .indices-section {
-                padding: 0;
-            }
-
-            .indices-pills {
-                grid-template-columns: 1fr;
-                gap: 0.6rem;
-            }
-
-            .index-pill {
-                padding: 0.9rem 0.75rem;
-            }
-
-            .index-abbreviation {
-                font-size: 1rem;
-            }
-
-            .index-name {
-                font-size: 0.7rem;
-            }
-
-            /* Stack tooltip text on mobile */
-            .index-pill::after {
-                white-space: normal;
-                max-width: 200px;
+                padding: 1.5rem;
             }
 
             .status-panel {
@@ -539,12 +527,48 @@
                 font-size: 1.5rem;
             }
 
+            .main-content {
+                gap: 1rem;
+            }
+
+            .action-card {
+                padding: 1.25rem;
+            }
+
             .card-icon {
                 font-size: 2.5rem;
             }
 
+            .action-card.primary .card-icon {
+                font-size: 3rem;
+            }
+
             .card-title {
+                font-size: 1.1rem;
+            }
+
+            .action-card.primary .card-title {
                 font-size: 1.2rem;
+            }
+
+            .indices-section {
+                padding: 1.25rem;
+            }
+
+            .indices-pills {
+                gap: 0.6rem;
+            }
+
+            .index-pill {
+                padding: 0.9rem 0.75rem;
+            }
+
+            .index-abbreviation {
+                font-size: 1rem;
+            }
+
+            .index-name {
+                font-size: 0.7rem;
             }
         }
 
@@ -571,43 +595,46 @@
             </p>
         </header>
 
-        <!-- AVAILABLE INDICES -->
-        <section class="indices-section">
-            <h3 class="indices-title">Available Indices</h3>
-            <div class="indices-pills">
-                <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures socioeconomic disadvantage">
-                    <span class="index-abbreviation">SDI</span>
-                    <span class="index-name">Social Deprivation Index</span>
-                </a>
-                <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures community resilience to disasters">
-                    <span class="index-abbreviation">SVI</span>
-                    <span class="index-name">Social Vulnerability Index</span>
-                </a>
-                <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures neighborhood disadvantage">
-                    <span class="index-abbreviation">ADI</span>
-                    <span class="index-name">Area Deprivation Index</span>
-                </a>
-                <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures access to child well-being resources">
-                    <span class="index-abbreviation">COI</span>
-                    <span class="index-name">Child Opportunity Index</span>
-                </a>
-            </div>
-        </section>
+        <!-- MAIN CONTENT: TWO COLUMN LAYOUT -->
+        <div class="main-content">
+            <!-- LEFT COLUMN: AVAILABLE INDICES -->
+            <section class="indices-section">
+                <h3 class="indices-title">Available Indices</h3>
+                <div class="indices-pills">
+                    <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures socioeconomic disadvantage">
+                        <span class="index-abbreviation">SDI</span>
+                        <span class="index-name">Social Deprivation Index</span>
+                    </a>
+                    <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures community resilience to disasters">
+                        <span class="index-abbreviation">SVI</span>
+                        <span class="index-name">Social Vulnerability Index</span>
+                    </a>
+                    <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures neighborhood disadvantage">
+                        <span class="index-abbreviation">ADI</span>
+                        <span class="index-name">Area Deprivation Index</span>
+                    </a>
+                    <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures access to child well-being resources">
+                        <span class="index-abbreviation">COI</span>
+                        <span class="index-name">Child Opportunity Index</span>
+                    </a>
+                </div>
+            </section>
 
-        <!-- ACTION CARDS -->
-        <section class="action-cards">
-            <a href="/geocode" class="action-card primary">
-                <span class="card-icon">📍</span>
-                <h2 class="card-title">Check Address</h2>
-                <p class="card-description">Look up SDOH indices for any U.S. address</p>
-            </a>
+            <!-- RIGHT COLUMN: ACTION PANEL -->
+            <section class="action-panel">
+                <a href="/geocode" class="action-card primary">
+                    <span class="card-icon">📍</span>
+                    <h2 class="card-title">Check Address</h2>
+                    <p class="card-description">Look up SDOH indices for any U.S. address</p>
+                </a>
 
-            <a href="/download" class="action-card secondary">
-                <span class="card-icon">⬇️</span>
-                <h2 class="card-title">Download States</h2>
-                <p class="card-description">Add more state data packages to your installation</p>
-            </a>
-        </section>
+                <a href="/download" class="action-card secondary">
+                    <span class="card-icon">⬇️</span>
+                    <h2 class="card-title">Download States</h2>
+                    <p class="card-description">Add more state data packages to your installation</p>
+                </a>
+            </section>
+        </div>
 
         <!-- STATUS PANEL -->
         <aside class="status-panel">
