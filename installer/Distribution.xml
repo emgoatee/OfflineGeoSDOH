@@ -13,5 +13,5 @@
     <choice id="com.offlinegeolocator.app" visible="false">
         <pkg-ref id="com.offlinegeolocator.app"/>
     </choice>
-    <pkg-ref id="com.offlinegeolocator.app" version="1.0.6" onConclusion="none">OfflineGeoLocator-Component-v1.0.6.pkg</pkg-ref>
+    <pkg-ref id="com.offlinegeolocator.app" version="1.0.0" onConclusion="none">OfflineGeoLocator-Component-v1.0.0.pkg</pkg-ref>
 </installer-gui-script>
