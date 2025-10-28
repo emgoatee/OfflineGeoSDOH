@@ -255,28 +255,23 @@ def lookup_coi(tract_fips, df):
 @app.route('/')
 def welcome():
     """Welcome page with options to check address or download states."""
-    # Check which states have addrfeat files downloaded
+    # Check which states have been downloaded to Application Support directory
+    # (not counting bundled/development data in local data/ directory)
     downloaded_states = []
     user_data_dir = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", "data")
 
-    for fips, abbr in STATE_FIPS.items():
-        # Check both Application Support and local data directory
-        has_files = False
-        if os.path.exists(user_data_dir):
+    if os.path.exists(user_data_dir):
+        for fips, abbr in STATE_FIPS.items():
+            # Only check Application Support directory (where downloaded states go)
             pattern = os.path.join(user_data_dir, f"tl_2022_{fips}*_addrfeat.shp")
             if glob.glob(pattern):
-                has_files = True
-
-        if not has_files:
-            pattern = resource_path(f"data/tl_2022_{fips}*_addrfeat.shp")
-            if glob.glob(pattern):
-                has_files = True
-
-        if has_files and abbr in [s[0] for s in available_states]:
-            downloaded_states.append(abbr)
+                # Verify tract file also exists
+                tract_pattern = os.path.join(user_data_dir, f"tl_2022_{fips}_tract.shp")
+                if glob.glob(tract_pattern):
+                    downloaded_states.append(abbr)
 
     downloaded_states.sort()
-    states_list = ', '.join(downloaded_states)
+    states_list = ', '.join(downloaded_states) if downloaded_states else "No states downloaded yet"
 
     return render_template(
         "welcome.html",
