@@ -117,40 +117,53 @@
         }
 
         .indices-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .index-pill {
             position: relative;
-            display: inline-flex;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.35rem;
+            justify-content: center;
+            gap: 0.25rem;
             background: white;
             color: var(--primary-plum);
-            padding: 0.5rem 1rem;
-            border-radius: 24px;
+            padding: 1rem 0.75rem;
+            border-radius: var(--radius-md);
             font-size: 0.85rem;
             font-weight: 600;
-            border: 1.5px solid var(--primary-lavender);
-            box-shadow: 0 1px 3px rgba(139, 123, 168, 0.1);
-            cursor: help;
+            border: 2px solid var(--primary-lavender);
+            box-shadow: 0 2px 6px rgba(139, 123, 168, 0.12);
+            cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
         }
 
         .index-pill:hover {
             background: var(--primary-lavender);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(139, 123, 168, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(139, 123, 168, 0.25);
+            border-color: var(--primary-plum);
         }
 
         .index-abbreviation {
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .index-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.3;
         }
 
         /* Tooltip on hover */
@@ -442,12 +455,20 @@
             }
 
             .indices-pills {
-                gap: 0.4rem;
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
             }
 
             .index-pill {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.85rem;
+                padding: 0.9rem 0.75rem;
+            }
+
+            .index-abbreviation {
+                font-size: 1rem;
+            }
+
+            .index-name {
+                font-size: 0.7rem;
             }
 
             /* Stack tooltip text on mobile */
@@ -502,22 +523,22 @@
         <section class="indices-section">
             <h3 class="indices-title">Available Indices</h3>
             <div class="indices-pills">
-                <div class="index-pill" data-tooltip="Measures socioeconomic disadvantage">
+                <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures socioeconomic disadvantage">
                     <span class="index-abbreviation">SDI</span>
-                    <span>Social Deprivation Index</span>
-                </div>
-                <div class="index-pill" data-tooltip="Measures community resilience to disasters">
+                    <span class="index-name">Social Deprivation Index</span>
+                </a>
+                <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures community resilience to disasters">
                     <span class="index-abbreviation">SVI</span>
-                    <span>Social Vulnerability Index</span>
-                </div>
-                <div class="index-pill" data-tooltip="Measures neighborhood disadvantage">
+                    <span class="index-name">Social Vulnerability Index</span>
+                </a>
+                <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures neighborhood disadvantage">
                     <span class="index-abbreviation">ADI</span>
-                    <span>Area Deprivation Index</span>
-                </div>
-                <div class="index-pill" data-tooltip="Measures access to child well-being resources">
+                    <span class="index-name">Area Deprivation Index</span>
+                </a>
+                <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures access to child well-being resources">
                     <span class="index-abbreviation">COI</span>
-                    <span>Child Opportunity Index</span>
-                </div>
+                    <span class="index-name">Child Opportunity Index</span>
+                </a>
             </div>
         </section>
 
