@@ -218,9 +218,9 @@
             text-align: center;
             text-decoration: none;
             color: inherit;
-            /* Subtle border for definition */
-            border: 2px solid transparent;
-            box-shadow: var(--shadow-sm);
+            /* More prominent border for better definition */
+            border: 2px solid rgba(139, 123, 168, 0.25);
+            box-shadow: var(--shadow-md);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
@@ -244,24 +244,24 @@
 
         /* Primary card - Check Address */
         .action-card.primary {
-            border-color: var(--primary-lavender);
+            border-color: rgba(184, 164, 212, 0.5);
         }
 
         .action-card.primary:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(139, 123, 168, 0.25);
             border-color: var(--primary-plum);
             background: linear-gradient(135deg, #FFFFFF 0%, #F3EFFC 100%);
         }
 
         /* Secondary card - Download States */
         .action-card.secondary {
-            border-color: var(--slate-light);
+            border-color: rgba(139, 123, 168, 0.4);
         }
 
         .action-card.secondary:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(216, 150, 186, 0.25);
             border-color: var(--accent-pink);
             background: linear-gradient(135deg, #FFFFFF 0%, #FCF7FA 100%);
         }
@@ -275,7 +275,7 @@
         }
 
         .action-card:hover .card-icon {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg);
         }
 
         .card-title {
