@@ -74,10 +74,17 @@ STATE_FIPS = {
 }
 
 def get_data_dir():
-    """Get the data directory path (handles both dev and frozen app)."""
-    # Use user's home directory to avoid permission issues with /Applications
+    """Get the data directory path (handles both dev and frozen app, cross-platform)."""
     home_dir = os.path.expanduser("~")
-    data_dir = os.path.join(home_dir, "Library", "Application Support", "OfflineGeoLocator", "data")
+
+    # Platform-specific data directory
+    if sys.platform == "darwin":  # macOS
+        data_dir = os.path.join(home_dir, "Library", "Application Support", "OfflineGeoLocator", "data")
+    elif sys.platform == "win32":  # Windows
+        appdata = os.environ.get('APPDATA', home_dir)
+        data_dir = os.path.join(appdata, "OfflineGeoSDOH", "data")
+    else:  # Linux
+        data_dir = os.path.join(home_dir, ".local", "share", "OfflineGeoSDOH", "data")
 
     # Make sure it exists
     os.makedirs(data_dir, exist_ok=True)
