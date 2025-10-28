@@ -99,55 +99,106 @@
         }
 
         /* ============================================
-           INDICES SECTION - Available health indices
+           INDICES SECTION - Info pills with hover tooltips
            ============================================ */
         .indices-section {
             padding: 0 1rem;
             margin-bottom: 2.5rem;
-        }
-
-        .indices-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary-plum);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
             text-align: center;
         }
 
-        .indices-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.75rem;
-        }
-
-        .index-item {
-            background: var(--bg-off-white);
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius-sm);
-            border-left: 3px solid var(--accent-pink);
-            transition: all 0.2s ease;
-        }
-
-        .index-item:hover {
-            background: white;
-            border-left-color: var(--primary-plum);
-            transform: translateX(4px);
-            box-shadow: 0 2px 6px rgba(139, 123, 168, 0.1);
-        }
-
-        .index-name {
-            font-size: 0.875rem;
+        .indices-title {
+            font-size: 0.85rem;
             font-weight: 600;
-            color: var(--slate-dark);
-            margin-bottom: 0.25rem;
+            color: var(--slate-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .indices-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .index-pill {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: white;
+            color: var(--primary-plum);
+            padding: 0.5rem 1rem;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1.5px solid var(--primary-lavender);
+            box-shadow: 0 1px 3px rgba(139, 123, 168, 0.1);
+            cursor: help;
+            transition: all 0.3s ease;
+        }
+
+        .index-pill:hover {
+            background: var(--primary-lavender);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(139, 123, 168, 0.2);
         }
 
         .index-abbreviation {
-            font-size: 0.75rem;
-            color: var(--slate-medium);
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        /* Tooltip on hover */
+        .index-pill::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: var(--slate-dark);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
             font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* Tooltip arrow */
+        .index-pill::before {
+            content: '';
+            position: absolute;
+            bottom: calc(100% + 2px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid var(--slate-dark);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .index-pill:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .index-pill:hover::before {
+            opacity: 1;
         }
 
         /* ============================================
@@ -390,8 +441,19 @@
                 padding: 0;
             }
 
-            .indices-grid {
-                grid-template-columns: 1fr;
+            .indices-pills {
+                gap: 0.4rem;
+            }
+
+            .index-pill {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.85rem;
+            }
+
+            /* Stack tooltip text on mobile */
+            .index-pill::after {
+                white-space: normal;
+                max-width: 200px;
             }
 
             .status-panel {
@@ -438,23 +500,23 @@
 
         <!-- AVAILABLE INDICES -->
         <section class="indices-section">
-            <h2 class="indices-title">Available Indices</h2>
-            <div class="indices-grid">
-                <div class="index-item">
-                    <div class="index-name">Social Deprivation Index</div>
-                    <div class="index-abbreviation">SDI</div>
+            <h3 class="indices-title">Available Indices</h3>
+            <div class="indices-pills">
+                <div class="index-pill" data-tooltip="Measures socioeconomic disadvantage">
+                    <span class="index-abbreviation">SDI</span>
+                    <span>Social Deprivation Index</span>
                 </div>
-                <div class="index-item">
-                    <div class="index-name">Social Vulnerability Index</div>
-                    <div class="index-abbreviation">SVI</div>
+                <div class="index-pill" data-tooltip="Measures community resilience to disasters">
+                    <span class="index-abbreviation">SVI</span>
+                    <span>Social Vulnerability Index</span>
                 </div>
-                <div class="index-item">
-                    <div class="index-name">Brokamp Area Deprivation Index</div>
-                    <div class="index-abbreviation">ADI</div>
+                <div class="index-pill" data-tooltip="Measures neighborhood disadvantage">
+                    <span class="index-abbreviation">ADI</span>
+                    <span>Area Deprivation Index</span>
                 </div>
-                <div class="index-item">
-                    <div class="index-name">Child Opportunity Index</div>
-                    <div class="index-abbreviation">COI</div>
+                <div class="index-pill" data-tooltip="Measures access to child well-being resources">
+                    <span class="index-abbreviation">COI</span>
+                    <span>Child Opportunity Index</span>
                 </div>
             </div>
         </section>
