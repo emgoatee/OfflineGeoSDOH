@@ -1,0 +1,140 @@
+name: Create Multi-Platform Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller pillow
+
+    - name: Create data directory
+      run: |
+        if (-not (Test-Path "data")) {
+          New-Item -ItemType Directory -Path data -Force
+        }
+      shell: powershell
+
+    - name: Create Windows icon
+      run: python create_windows_icon.py
+
+    - name: Build with PyInstaller
+      run: pyinstaller OfflineGeoLocator_windows.spec --clean
+
+    - name: Install Inno Setup
+      run: choco install innosetup -y
+
+    - name: Create installer
+      run: |
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_windows.iss
+
+    - name: Upload Windows Installer
+      uses: actions/upload-artifact@v3
+      with:
+        name: windows-installer
+        path: OfflineGeoSDOH-Installer-v*-Windows.exe
+        retention-days: 7
+
+  create-release:
+    needs: [build-windows]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download Windows Installer
+      uses: actions/download-artifact@v3
+      with:
+        name: windows-installer
+
+    - name: Get tag name
+      id: tag
+      run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Offline GEO-SDOH ${{ steps.tag.outputs.tag }}
+        body: |
+          # Offline GEO-SDOH ${{ steps.tag.outputs.tag }}
+
+          **Complete offline geocoding and Social Determinants of Health (SDOH) indices lookup**
+
+          ## Downloads
+
+          ### Windows
+          - **Windows Installer**: `OfflineGeoSDOH-Installer-v${{ steps.tag.outputs.tag }}-Windows.exe`
+            - One-click installer for Windows 10/11
+            - Includes app and dependencies
+            - ~180MB download
+
+          ### macOS
+          - **Mac Installer**: `OfflineGeoLocator-Installer-v${{ steps.tag.outputs.tag }}.pkg`
+            - Upload this manually from your Mac build
+            - For macOS 10.13 or later
+            - ~176MB download
+
+          ### Data Packages (All Platforms)
+          - **Core Data** (Required): `core_data.zip`
+          - **State Packages**: Download state ZIP files as needed
+
+          ## What's New
+
+          See [CHANGELOG.md](https://github.com/emgoatee/OfflineGeoSDOH/blob/main/CHANGELOG.md) for details.
+
+          ## Installation
+
+          ### Windows
+          1. Download `OfflineGeoSDOH-Installer-v${{ steps.tag.outputs.tag }}-Windows.exe`
+          2. Run the installer
+          3. Launch from Start Menu
+          4. Download states on first run
+
+          ### macOS
+          1. Download `OfflineGeoLocator-Installer-v${{ steps.tag.outputs.tag }}.pkg`
+          2. Right-click → Open (to bypass Gatekeeper)
+          3. Follow installation prompts
+          4. Launch from Applications folder
+
+          ## System Requirements
+
+          - **Windows**: Windows 10/11 (64-bit)
+          - **macOS**: macOS 10.13 or later
+          - **Disk Space**: 500MB + space for states you download
+          - **Internet**: Only needed for initial install and state downloads
+
+          ---
+
+          🤖 Built with automated CI/CD
+
+          Developed by [GooteeMD](https://www.linkedin.com/in/ecem-tombas/)
+        files: |
+          OfflineGeoSDOH-Installer-v*-Windows.exe
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
