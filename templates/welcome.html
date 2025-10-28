@@ -136,7 +136,7 @@
 
         .indices-pills {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 0.75rem;
         }
 
@@ -513,6 +513,11 @@
                 padding: 1.5rem;
             }
 
+            /* Stack indices to 2x2 on tablets */
+            .indices-pills {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .status-panel {
                 padding: 1.5rem;
             }
@@ -555,7 +560,9 @@
                 padding: 1.25rem;
             }
 
+            /* Single column on mobile */
             .indices-pills {
+                grid-template-columns: 1fr;
                 gap: 0.6rem;
             }
 
