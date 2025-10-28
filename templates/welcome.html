@@ -235,16 +235,60 @@
             color: var(--primary-plum);
         }
 
+        .status-count {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-plum);
+            margin: 0.5rem 0;
+        }
+
+        .status-label {
+            font-size: 0.9rem;
+            color: var(--slate-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
         .states-list {
             background: var(--bg-off-white);
             border-radius: var(--radius-sm);
             padding: 1.25rem;
-            margin: 1rem 0;
-            font-size: 0.95rem;
-            color: var(--slate-medium);
-            line-height: 1.8;
+            margin: 1.5rem 0;
+            /* Grid layout for state badges */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
             /* Subtle inner shadow for depth */
             box-shadow: inset 0 2px 4px rgba(139, 123, 168, 0.06);
+        }
+
+        .state-badge {
+            display: inline-block;
+            background: white;
+            color: var(--primary-plum);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1.5px solid var(--primary-lavender);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(139, 123, 168, 0.1);
+        }
+
+        .state-badge:hover {
+            background: var(--primary-lavender);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 6px rgba(139, 123, 168, 0.2);
+        }
+
+        .empty-state {
+            color: var(--slate-light);
+            font-style: italic;
+            padding: 1rem;
+            text-align: center;
         }
 
         .helper-text {
@@ -357,9 +401,20 @@
         <aside class="status-panel">
             <div class="status-header">
                 <div class="status-icon">✓</div>
-                <p class="status-title">{{ state_count }} states/territories ready for geocoding</p>
             </div>
-            <div class="states-list">{{ states_list }}</div>
+            <div style="text-align: center;">
+                <div class="status-count">{{ state_count }}</div>
+                <div class="status-label">States Ready</div>
+            </div>
+            <div class="states-list">
+                {% if state_count > 0 %}
+                    {% for state in states_list.split(', ') %}
+                        <span class="state-badge">{{ state }}</span>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">No states downloaded yet</div>
+                {% endif %}
+            </div>
             <p class="helper-text">
                 Need more states? Click <a href="/download">"Download States"</a> above to add additional state data packages.
             </p>
