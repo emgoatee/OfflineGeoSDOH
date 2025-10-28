@@ -1,133 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Determinants of Health (SDOH) Indices Lookup by Address</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           ROOT VARIABLES - Healthcare-inspired palette
+           ============================================ */
+        :root {
+            --primary-lavender: #B8A4D4;
+            --primary-plum: #8B7BA8;
+            --accent-pink: #D896BA;
+            --slate-dark: #475569;
+            --slate-medium: #64748B;
+            --slate-light: #94A3B8;
+            --bg-off-white: #F8F7FC;
+            --bg-card: #FFFFFF;
+            --shadow-sm: 0 2px 8px rgba(139, 123, 168, 0.08);
+            --shadow-md: 0 4px 16px rgba(139, 123, 168, 0.12);
+            --shadow-lg: 0 8px 32px rgba(139, 123, 168, 0.16);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+        }
+
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Montserrat', sans-serif;
-            margin: 40px auto;
-            max-width: 800px;
-            background: #f8f9fa;
-            text-align: center;
-        }
-        h1 {
-            font-size: 2.2em;
-            margin-bottom: 16px;
-            color: rgb(216, 150, 186);
-        }
-        .subtitle {
-            color: #555;
-            margin-bottom: 40px;
-            font-size: 1.1em;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            /* Subtle gradient background for depth */
+            background: linear-gradient(135deg, var(--bg-off-white) 0%, #E9E3F5 100%);
+            color: var(--slate-dark);
             line-height: 1.6;
-        }
-        .button-container {
+            min-height: 100vh;
+            padding: 2rem 1rem;
             display: flex;
-            gap: 20px;
             justify-content: center;
-            margin: 40px 0;
+            align-items: center;
         }
-        .main-button {
-            flex: 1;
-            max-width: 220px;
-            padding: 25px 20px;
-            background: white;
-            border: 2px solid rgb(216, 150, 186);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
+
+        /* ============================================
+           MAIN CONTAINER - Max width with breathing room
+           ============================================ */
+        .container {
+            max-width: 920px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           HEADER - Title and subtitle with hierarchy
+           ============================================ */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            /* Gradient text for modern look */
+            background: linear-gradient(135deg, var(--primary-plum) 0%, var(--accent-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.05rem;
+            color: var(--slate-medium);
+            line-height: 1.7;
+            max-width: 780px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        .subtitle strong {
+            color: var(--slate-dark);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           ACTION CARDS - Primary and secondary CTAs
+           ============================================ */
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .action-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            text-align: center;
             text-decoration: none;
-            color: #333;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: inherit;
+            /* Subtle border for definition */
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .main-button:hover {
-            background: rgb(216, 150, 186);
+
+        /* Hover shine effect */
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-card:hover::before {
+            left: 100%;
+        }
+
+        /* Primary card - Check Address */
+        .action-card.primary {
+            border-color: var(--primary-lavender);
+        }
+
+        .action-card.primary:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-plum);
+            background: linear-gradient(135deg, #FFFFFF 0%, #F3EFFC 100%);
+        }
+
+        /* Secondary card - Download States */
+        .action-card.secondary {
+            border-color: var(--slate-light);
+        }
+
+        .action-card.secondary:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-pink);
+            background: linear-gradient(135deg, #FFFFFF 0%, #FCF7FA 100%);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            /* Subtle animation on hover */
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--slate-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--slate-medium);
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           STATUS PANEL - System readiness indicator
+           ============================================ */
+        .status-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-lavender);
+            position: relative;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            /* Animated pulse effect for status */
+            background: linear-gradient(135deg, var(--primary-lavender), var(--accent-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(216, 150, 186, 0.4);
-        }
-        .button-icon {
-            font-size: 2.2em;
-            margin-bottom: 10px;
-        }
-        .button-title {
-            font-size: 1.2em;
+            font-size: 0.75rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            animation: pulse 2s infinite;
         }
-        .button-description {
-            font-size: 0.85em;
-            color: #666;
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
         }
-        .main-button:hover .button-description {
-            color: rgba(255,255,255,0.9);
+
+        .status-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-plum);
         }
-        .states-info {
-            margin-top: 60px;
-            padding: 25px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .states-info h2 {
-            color: rgb(216, 150, 186);
-            margin-bottom: 15px;
-        }
+
         .states-list {
-            color: #555;
+            background: var(--bg-off-white);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            color: var(--slate-medium);
             line-height: 1.8;
-            font-size: 0.95em;
+            /* Subtle inner shadow for depth */
+            box-shadow: inset 0 2px 4px rgba(139, 123, 168, 0.06);
         }
-        .state-count {
-            font-weight: 700;
-            color: rgb(216, 150, 186);
-            font-size: 1.2em;
+
+        .helper-text {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--slate-light);
+            margin-top: 1rem;
+            font-style: italic;
         }
-        @media (max-width: 700px) {
-            .button-container {
-                flex-direction: column;
-                gap: 20px;
+
+        .helper-text a {
+            color: var(--primary-plum);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .helper-text a:hover {
+            color: var(--accent-pink);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN - Mobile optimizations
+           ============================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem 1rem;
             }
-            .main-button {
-                max-width: 100%;
+
+            .title {
+                font-size: 1.75rem;
             }
-            h1 {
-                font-size: 2em;
+
+            .subtitle {
+                font-size: 0.95rem;
             }
+
+            .action-cards {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .action-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .status-panel {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .card-icon {
+                font-size: 2.5rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ============================================
+           ACCESSIBILITY - Focus states
+           ============================================ */
+        .action-card:focus {
+            outline: 3px solid var(--primary-lavender);
+            outline-offset: 4px;
+        }
+
+        .action-card:focus:not(:focus-visible) {
+            outline: none;
         }
     </style>
 </head>
 <body>
-    <h1>Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
-    <div class="subtitle">
-        Enter any U.S. address to instantly view neighborhood-level Social Determinants of Health data, including the <strong>Social Deprivation Index (SDI)</strong>, <strong>Social Vulnerability Index (SVI)</strong>, <strong>Brokamp Area Deprivation Index (ADI)</strong> and <strong>Child Opportunity Index (COI)</strong> with key metrics. Supports all 50 U.S. states and U.S. territories.
-    </div>
+    <div class="container">
+        <!-- HEADER SECTION -->
+        <header class="header">
+            <h1 class="title">Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
+            <p class="subtitle">
+                Enter any U.S. address to instantly view neighborhood-level Social Determinants of Health data, including the
+                <strong>Social Deprivation Index (SDI)</strong>,
+                <strong>Social Vulnerability Index (SVI)</strong>,
+                <strong>Brokamp Area Deprivation Index (ADI)</strong> and
+                <strong>Child Opportunity Index (COI)</strong> with key metrics.
+                Supports all 50 U.S. states and U.S. territories.
+            </p>
+        </header>
 
-    <div class="button-container">
-        <a href="/geocode" class="main-button">
-            <div class="button-icon">📍</div>
-            <div class="button-title">Check Address</div>
-            <div class="button-description">Look up SDOH indices for any U.S. address</div>
-        </a>
+        <!-- ACTION CARDS -->
+        <section class="action-cards">
+            <a href="/geocode" class="action-card primary">
+                <span class="card-icon">📍</span>
+                <h2 class="card-title">Check Address</h2>
+                <p class="card-description">Look up SDOH indices for any U.S. address</p>
+            </a>
 
-        <a href="/download" class="main-button">
-            <div class="button-icon">⬇️</div>
-            <div class="button-title">Download States</div>
-            <div class="button-description">Add more state data packages to your installation</div>
-        </a>
-    </div>
+            <a href="/download" class="action-card secondary">
+                <span class="card-icon">⬇️</span>
+                <h2 class="card-title">Download States</h2>
+                <p class="card-description">Add more state data packages to your installation</p>
+            </a>
+        </section>
 
-    <div class="states-info">
-        <p class="state-count">{{ state_count }} states/territories ready for geocoding</p>
-        <div class="states-list">
-            {{ states_list }}
-        </div>
-        <p style="margin-top: 15px; font-size: 0.9em; color: #777;">
-            Need more states? Click "Download States" above to add additional state data packages.
-        </p>
+        <!-- STATUS PANEL -->
+        <aside class="status-panel">
+            <div class="status-header">
+                <div class="status-icon">✓</div>
+                <p class="status-title">{{ state_count }} states/territories ready for geocoding</p>
+            </div>
+            <div class="states-list">{{ states_list }}</div>
+            <p class="helper-text">
+                Need more states? Click <a href="/download">"Download States"</a> above to add additional state data packages.
+            </p>
+        </aside>
     </div>
 </body>
 </html>
