@@ -2,8 +2,6 @@
 
 A Mac application that performs **completely offline** geocoding of US addresses and retrieves multiple Social Determinants of Health (SDOH) indices.
 
-🎉 **New: Easy one-click installer package!**
-
 ## Features
 
 - ✅ **100% Offline Operation**: Works without internet after initial setup
