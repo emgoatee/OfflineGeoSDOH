@@ -28,3 +28,7 @@ state_packages/
 
 # Logs
 *.log
+
+# Large executables (include in releases, not in git)
+installer/OfflineGeoLocator.app/Contents/Resources/OfflineGeoLocator_executable
+*.pkg
