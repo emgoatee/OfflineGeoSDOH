@@ -10,11 +10,10 @@ RESOURCES_DIR="$DIR/../Resources"
 # Change to the Resources directory
 cd "$RESOURCES_DIR"
 
-# Create data directory if it doesn't exist
-mkdir -p data
-
-# Check if this is the first run (no data files)
-if [ ! -f "data/geodata.csv" ]; then
+# Check if this is the first run (no state shapefiles downloaded yet)
+USER_DATA_DIR="$HOME/Library/Application Support/OfflineGeoLocator/data"
+# Check if any tract shapefiles exist (these are downloaded by users)
+if ! ls "$USER_DATA_DIR"/tl_2022_*_tract.shp >/dev/null 2>&1; then
     # Show welcome message
     osascript -e 'display dialog "Welcome to OfflineGeoLocator!\n\nThis is your first time running the app. You need to download state data packages to use the geocoding features.\n\nThe state downloader will open in Terminal. Follow the prompts to download the states you need.\n\nAfter downloading states, close the Terminal window and launch the app again from Applications." buttons {"OK"} default button "OK" with title "OfflineGeoLocator - First Run"'
 
