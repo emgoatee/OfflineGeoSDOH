@@ -87,15 +87,20 @@
             background-clip: text;
             margin-bottom: 1rem;
             letter-spacing: -0.02em;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
         }
 
         .subtitle {
             font-size: 1.05rem;
             color: var(--slate-medium);
             line-height: 1.7;
-            max-width: 780px;
+            max-width: 650px;
             margin: 0 auto;
             font-weight: 400;
+            text-align: center;
         }
 
         .subtitle strong {
@@ -135,8 +140,8 @@
         }
 
         .indices-pills {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 0.75rem;
         }
 
@@ -513,11 +518,6 @@
                 padding: 1.5rem;
             }
 
-            /* Stack indices to 2x2 on tablets */
-            .indices-pills {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
             .status-panel {
                 padding: 1.5rem;
             }
@@ -560,9 +560,7 @@
                 padding: 1.25rem;
             }
 
-            /* Single column on mobile */
             .indices-pills {
-                grid-template-columns: 1fr;
                 gap: 0.6rem;
             }
 
