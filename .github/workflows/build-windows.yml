@@ -48,7 +48,7 @@ jobs:
     - name: Verify executable was created
       run: |
         if (Test-Path "dist\OfflineGeoSDOH.exe") {
-          Write-Host "✓ Executable built successfully"
+          Write-Host "Executable built successfully"
           $size = (Get-Item "dist\OfflineGeoSDOH.exe").Length / 1MB
           Write-Host "Size: $([math]::Round($size, 2)) MB"
         } else {
@@ -70,7 +70,7 @@ jobs:
       run: |
         $installer = Get-ChildItem -Filter "OfflineGeoSDOH-Installer-*.exe" | Select-Object -First 1
         if ($installer) {
-          Write-Host "✓ Installer created: $($installer.Name)"
+          Write-Host "Installer created: $($installer.Name)"
           $size = $installer.Length / 1MB
           Write-Host "Size: $([math]::Round($size, 2)) MB"
         } else {
