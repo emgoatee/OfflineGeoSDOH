@@ -169,8 +169,8 @@
     <h1>Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
     <div class="subtitle">
         Enter any U.S. address to instantly view neighborhood-level Social Determinants of Health data, including the
-        Social Deprivation Index (SDI), Social Vulnerability Index (SVI), Area Deprivation Index (ADI), Child
-        Opportunity Index (COI), and Material Community Deprivation (Brokamp) Index.
+        Area Deprivation Index (ADI), Material Community Deprivation (Brokamp) Index, Child Opportunity Index (COI),
+        Social Deprivation Index (SDI), and Social Vulnerability Index (SVI).
         Supports all 50 U.S. states and U.S. territories.
     </div>
     <form method="POST" onsubmit="showLoading();">
@@ -206,56 +206,7 @@
     </div>
     <div class="result">
 
-        {% if result %}
-        <div style="font-weight:bold;margin-bottom:5px;">Social Deprivation Index (SDI)</div>
-        <div class="description">Measures socioeconomic variation in health outcomes at the census tract level based on
-            income, education, employment, and housing quality.</div>
-        <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank"
-            class="learn-more">Learn more</a>
-        <div class="field"><span class="label">SDI Score:</span> <b>{{ result.SDI_score }}</b></div>
-        <div class="field"><span class="label">SDI Category:</span> <b>{{ result.sdi }}</b></div>
-        {% endif %}
-
-        {% if acs_zip_data %}
-        <hr style="margin:16px 0;">
-        <div style="font-weight:bold;margin-bottom:5px;">Material Community Deprivation (Brokamp) Index by ZIP</div>
-        <div class="description">ZIP code-level deprivation index developed by Dr. Cole Brokamp, useful for areas where
-            census tract data may be unavailable or less precise.</div>
-        <a href="https://geomarker.io/dep_index/" target="_blank" class="learn-more">Learn more</a>
-        <div class="field"><span class="label">Brokamp ADI:</span> <b>{{ acs_zip_data.Brokamp_ADI }}</b></div>
-        {% endif %}
-
-        {% if acs_data %}
-        <hr style="margin:16px 0;">
-        <div style="font-weight:bold;margin-bottom:5px;">Material Community Deprivation (Brokamp) Index (Tract-level)
-        </div>
-        <div class="description">Tract-level deprivation index developed by Dr. Cole Brokamp based on ACS data,
-            including income, education, and housing metrics.</div>
-        <a href="https://geomarker.io/dep_index/" target="_blank" class="learn-more">Learn more</a>
-        <div class="field"><span class="label">ACS Deprivation Index:</span> <b>{{ acs_data.ACS_deprivation_index }}</b>
-        </div>
-        <div class="field"><span class="label">Median Income:</span> <b>${{ acs_data.median_income }}</b></div>
-        {% endif %}
-
-        {% if svi_data %}
-        <hr style="margin:16px 0;">
-        <div style="font-weight:bold;margin-bottom:5px;">Social Vulnerability Index (SVI)</div>
-        <div class="description">CDC index that identifies communities most vulnerable to disasters and public health
-            emergencies using census data on socioeconomic status, household composition, and more.</div>
-        <a href="https://www.atsdr.cdc.gov/place-health/php/svi/index.html" target="_blank" class="learn-more">Learn
-            more</a>
-        <div class="field"><span class="label">Poverty Percentile (EPL_POV150):</span> <b>{{ svi_data.EPL_POV150 }}</b>
-        </div>
-        <div class="field"><span class="label">Minority Percentile (EPL_MINRTY):</span> <b>{{ svi_data.EPL_MINRTY }}</b>
-        </div>
-        <div class="field"><span class="label">Sum SPL Themes (SPL_THEMES):</span> <b>{{ svi_data.SPL_THEMES }}</b>
-        </div>
-        <div class="field"><span class="label">Rank SPL Themes (RPL_THEMES):</span> <b>{{ svi_data.RPL_THEMES }}</b>
-        </div>
-        {% endif %}
-
         {% if adi_data %}
-        <hr style="margin:16px 0;">
         <div style="font-weight:bold;margin-bottom:5px;">Area Deprivation Index (ADI)</div>
         <div class="description">Ranks neighborhoods by socioeconomic disadvantage using factors like income, education,
             employment, and housing quality to identify areas with health disparities.</div>
@@ -266,8 +217,30 @@
         </div>
         {% endif %}
 
+        {% if acs_data or acs_zip_data %}
+        {% if adi_data %}
+        <hr style="margin:16px 0;">{% endif %}
+        <div style="font-weight:bold;margin-bottom:5px;">Material Community Deprivation (Brokamp) Index</div>
+        <div class="description">Deprivation index developed by Dr. Cole Brokamp, available at both census tract and ZIP
+            code levels.</div>
+        <a href="https://geomarker.io/dep_index/" target="_blank" class="learn-more">Learn more</a>
+
+        {% if acs_data %}
+        <div style="margin-top:10px; font-size:0.95em; color:#555; font-weight:600;">Tract-level metrics:</div>
+        <div class="field"><span class="label">ACS Deprivation Index:</span> <b>{{ acs_data.ACS_deprivation_index }}</b>
+        </div>
+        <div class="field"><span class="label">Median Income:</span> <b>${{ acs_data.median_income }}</b></div>
+        {% endif %}
+
+        {% if acs_zip_data %}
+        <div style="margin-top:10px; font-size:0.95em; color:#555; font-weight:600;">ZIP-level metrics:</div>
+        <div class="field"><span class="label">Brokamp ADI:</span> <b>{{ acs_zip_data.Brokamp_ADI }}</b></div>
+        {% endif %}
+        {% endif %}
+
         {% if coi_data %}
-        <hr style="margin:16px 0;">
+        {% if adi_data or acs_data or acs_zip_data %}
+        <hr style="margin:16px 0;">{% endif %}
         <div style="font-weight:bold;margin-bottom:5px;">Child Opportunity Index (COI)</div>
         <div class="description">Measures neighborhood conditions that matter for children's healthy development across
             education, health/environment, and social/economic domains.</div>
@@ -281,6 +254,36 @@
         <div class="field"><span class="label">z-score Health/Env:</span> <b>{{ coi_data.z_COI_health }}</b></div>
         <div class="field"><span class="label">COI Social/Economic:</span> <b>{{ coi_data.COI_social }}</b></div>
         <div class="field"><span class="label">z-score Social/Econ:</span> <b>{{ coi_data.z_COI_social }}</b></div>
+        {% endif %}
+
+        {% if result %}
+        {% if adi_data or coi_data or acs_data or acs_zip_data %}
+        <hr style="margin:16px 0;">{% endif %}
+        <div style="font-weight:bold;margin-bottom:5px;">Social Deprivation Index (SDI)</div>
+        <div class="description">Measures socioeconomic variation in health outcomes at the census tract level based on
+            income, education, employment, and housing quality.</div>
+        <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank"
+            class="learn-more">Learn more</a>
+        <div class="field"><span class="label">SDI Score:</span> <b>{{ result.SDI_score }}</b></div>
+        <div class="field"><span class="label">SDI Category:</span> <b>{{ result.sdi }}</b></div>
+        {% endif %}
+
+        {% if svi_data %}
+        {% if adi_data or coi_data or acs_data or acs_zip_data or result %}
+        <hr style="margin:16px 0;">{% endif %}
+        <div style="font-weight:bold;margin-bottom:5px;">Social Vulnerability Index (SVI)</div>
+        <div class="description">CDC index that identifies communities most vulnerable to disasters and public health
+            emergencies using census data on socioeconomic status, household composition, and more.</div>
+        <a href="https://www.atsdr.cdc.gov/place-health/php/svi/index.html" target="_blank" class="learn-more">Learn
+            more</a>
+        <div class="field"><span class="label">Poverty Percentile (EPL_POV150):</span> <b>{{ svi_data.EPL_POV150 }}</b>
+        </div>
+        <div class="field"><span class="label">Minority Percentile (EPL_MINRTY):</span> <b>{{ svi_data.EPL_MINRTY }}</b>
+        </div>
+        <div class="field"><span class="label">Sum SPL Themes (SPL_THEMES):</span> <b>{{ svi_data.SPL_THEMES }}</b>
+        </div>
+        <div class="field"><span class="label">Rank SPL Themes (RPL_THEMES):</span> <b>{{ svi_data.RPL_THEMES }}</b>
+        </div>
         {% endif %}
 
     </div>

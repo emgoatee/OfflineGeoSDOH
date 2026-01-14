@@ -135,6 +135,8 @@
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
             border: 1px solid rgba(184, 164, 212, 0.2);
+            display: flex;
+            flex-direction: column;
         }
 
         .indices-title {
@@ -151,6 +153,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            flex: 1;
         }
 
         .index-pill {
@@ -172,6 +175,8 @@
             transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
+            flex: 1;
+            /* Make all pills same size and fill space */
         }
 
         .index-pill:hover {
@@ -265,6 +270,12 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            flex: 1;
+            /* Make cards fill space equally */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Hover shine effect */
@@ -614,8 +625,8 @@
         <header class="header">
             <h1 class="title">Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
             <p class="subtitle">
-                Look up any U.S. address to view data on the neighborhood's social and economic conditions (SDI, SVI,
-                ADI, COI, and Material Community Deprivation Index), available nationwide across all states and
+                Look up any U.S. address to view data on the neighborhood's social and economic conditions (ADI,
+                Material Community Deprivation Index, COI, SDI, and SVI), available nationwide across all states and
                 territories.
             </p>
         </header>
@@ -626,6 +637,22 @@
             <section class="indices-section">
                 <h3 class="indices-title">Available Indices</h3>
                 <div class="indices-pills">
+                    <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer"
+                        class="index-pill" data-tooltip="Measures neighborhood disadvantage">
+                        <span class="index-abbreviation">ADI</span>
+                        <span class="index-name">Area Deprivation Index</span>
+                    </a>
+                    <a href="https://geomarker.io/dep_index/" target="_blank" rel="noopener noreferrer"
+                        class="index-pill" data-tooltip="Tract-level deprivation index">
+                        <span class="index-abbreviation">Brokamp</span>
+                        <span class="index-name">Material Community Deprivation Index</span>
+                    </a>
+                    <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank"
+                        rel="noopener noreferrer" class="index-pill"
+                        data-tooltip="Measures access to child well-being resources">
+                        <span class="index-abbreviation">COI</span>
+                        <span class="index-name">Child Opportunity Index</span>
+                    </a>
                     <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html"
                         target="_blank" rel="noopener noreferrer" class="index-pill"
                         data-tooltip="Measures socioeconomic disadvantage">
@@ -637,22 +664,6 @@
                         data-tooltip="Measures community resilience to disasters">
                         <span class="index-abbreviation">SVI</span>
                         <span class="index-name">Social Vulnerability Index</span>
-                    </a>
-                    <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer"
-                        class="index-pill" data-tooltip="Measures neighborhood disadvantage">
-                        <span class="index-abbreviation">ADI</span>
-                        <span class="index-name">Area Deprivation Index</span>
-                    </a>
-                    <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank"
-                        rel="noopener noreferrer" class="index-pill"
-                        data-tooltip="Measures access to child well-being resources">
-                        <span class="index-abbreviation">COI</span>
-                        <span class="index-name">Child Opportunity Index</span>
-                    </a>
-                    <a href="https://geomarker.io/dep_index/" target="_blank" rel="noopener noreferrer"
-                        class="index-pill" data-tooltip="Tract-level deprivation index">
-                        <span class="index-abbreviation">Brokamp</span>
-                        <span class="index-name">Material Community Deprivation Index</span>
                     </a>
                 </div>
             </section>
