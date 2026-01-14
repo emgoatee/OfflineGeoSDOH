@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,8 +66,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ============================================
@@ -267,7 +275,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
             transition: left 0.5s;
         }
 
@@ -392,8 +400,17 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
         }
 
         .status-text {
@@ -590,13 +607,15 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- HEADER SECTION -->
         <header class="header">
             <h1 class="title">Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
             <p class="subtitle">
-                Look up any U.S. address to view data on the neighborhood's social and economic conditions, available nationwide across all states and territories.
+                Look up any U.S. address to view data on the neighborhood's social and economic conditions (SDI, SVI,
+                ADI, COI, and Brokamp Index), available nationwide across all states and territories.
             </p>
         </header>
 
@@ -606,21 +625,33 @@
             <section class="indices-section">
                 <h3 class="indices-title">Available Indices</h3>
                 <div class="indices-pills">
-                    <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures socioeconomic disadvantage">
+                    <a href="https://www.graham-center.org/maps-data-tools/social-deprivation-index.html"
+                        target="_blank" rel="noopener noreferrer" class="index-pill"
+                        data-tooltip="Measures socioeconomic disadvantage">
                         <span class="index-abbreviation">SDI</span>
                         <span class="index-name">Social Deprivation Index</span>
                     </a>
-                    <a href="https://www.atsdr.cdc.gov/place-health/php/svi/index.html" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures community resilience to disasters">
+                    <a href="https://www.atsdr.cdc.gov/place-health/php/svi/index.html" target="_blank"
+                        rel="noopener noreferrer" class="index-pill"
+                        data-tooltip="Measures community resilience to disasters">
                         <span class="index-abbreviation">SVI</span>
                         <span class="index-name">Social Vulnerability Index</span>
                     </a>
-                    <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures neighborhood disadvantage">
+                    <a href="https://www.neighborhoodatlas.medicine.wisc.edu/" target="_blank" rel="noopener noreferrer"
+                        class="index-pill" data-tooltip="Measures neighborhood disadvantage">
                         <span class="index-abbreviation">ADI</span>
                         <span class="index-name">Area Deprivation Index</span>
                     </a>
-                    <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank" rel="noopener noreferrer" class="index-pill" data-tooltip="Measures access to child well-being resources">
+                    <a href="https://www.diversitydatakids.org/child-opportunity-index" target="_blank"
+                        rel="noopener noreferrer" class="index-pill"
+                        data-tooltip="Measures access to child well-being resources">
                         <span class="index-abbreviation">COI</span>
                         <span class="index-name">Child Opportunity Index</span>
+                    </a>
+                    <a href="https://geomarker.io/dep_index/" target="_blank" rel="noopener noreferrer"
+                        class="index-pill" data-tooltip="Tract-level deprivation index">
+                        <span class="index-abbreviation">Brokamp</span>
+                        <span class="index-name">Deprivation Index</span>
                     </a>
                 </div>
             </section>
@@ -653,22 +684,26 @@
             <p class="status-description">These states are currently available for lookup.</p>
             <div class="states-list">
                 {% if state_count > 0 %}
-                    {% for state in states_list.split(', ') %}
-                        <span class="state-badge">{{ state }}</span>
-                    {% endfor %}
+                {% for state in states_list.split(', ') %}
+                <span class="state-badge">{{ state }}</span>
+                {% endfor %}
                 {% else %}
-                    <div class="empty-state">No states downloaded yet</div>
+                <div class="empty-state">No states downloaded yet</div>
                 {% endif %}
             </div>
             <p class="helper-text">
-                Need more states? Click <a href="/download">"Download States"</a> above to add additional state data packages.
+                Need more states? Click <a href="/download">"Download States"</a> above to add additional state data
+                packages.
             </p>
         </aside>
 
         <!-- FOOTER -->
-        <footer style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(139, 123, 168, 0.15); color: var(--slate-light); font-size: 0.85rem;">
-            Developed by <a href="https://www.linkedin.com/in/ecem-tombas/" target="_blank" rel="noopener noreferrer" style="color: var(--primary-plum); text-decoration: none; font-weight: 600; transition: color 0.2s;">GooteeMD</a>
+        <footer
+            style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(139, 123, 168, 0.15); color: var(--slate-light); font-size: 0.85rem;">
+            Developed by <a href="https://www.linkedin.com/in/ecem-tombas/" target="_blank" rel="noopener noreferrer"
+                style="color: var(--primary-plum); text-decoration: none; font-weight: 600; transition: color 0.2s;">GooteeMD</a>
         </footer>
     </div>
 </body>
+
 </html>

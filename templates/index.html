@@ -41,7 +41,7 @@
 <body>
     <h1>Social Determinants of Health (SDOH) Indices Lookup by Address</h1>
     <div class="subtitle">
-        Enter any U.S. address to instantly view neighborhood-level Social Determinants of Health data, including the Social Deprivation Index (SDI), Social Vulnerability Index (SVI), Brokamp Area Deprivation Index (ADI) and Child Opportunity Index (COI) with key metrics.
+        Enter any U.S. address to instantly view neighborhood-level Social Determinants of Health data, including the Social Deprivation Index (SDI), Social Vulnerability Index (SVI), Area Deprivation Index (ADI), Child Opportunity Index (COI), and Brokamp Deprivation Index.
         Supports all 50 U.S. states and U.S. territories.
     </div>
     <form method="POST" onsubmit="showLoading();">
@@ -86,6 +86,15 @@
             <div class="description">ZIP code-level deprivation index developed by Dr. Cole Brokamp, useful for areas where census tract data may be unavailable or less precise.</div>
             <a href="https://geomarker.io/dep_index/" target="_blank" class="learn-more">Learn more</a>
             <div class="field"><span class="label">Brokamp ADI:</span> <b>{{ acs_zip_data.Brokamp_ADI }}</b></div>
+        {% endif %}
+
+        {% if acs_data %}
+            <hr style="margin:16px 0;">
+            <div style="font-weight:bold;margin-bottom:5px;">Brokamp Deprivation Index (Tract-level)</div>
+            <div class="description">Tract-level deprivation index developed by Dr. Cole Brokamp based on ACS data, including income, education, and housing metrics.</div>
+            <a href="https://geomarker.io/dep_index/" target="_blank" class="learn-more">Learn more</a>
+            <div class="field"><span class="label">ACS Deprivation Index:</span> <b>{{ acs_data.ACS_deprivation_index }}</b></div>
+            <div class="field"><span class="label">Median Income:</span> <b>${{ acs_data.median_income }}</b></div>
         {% endif %}
 
         {% if svi_data %}
