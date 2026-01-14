@@ -13,4 +13,4 @@ img = Image.open('SDOH_icon.png')
 icon_sizes = [(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
 img.save('SDOH_icon.ico', format='ICO', sizes=icon_sizes)
 
-print("✓ Created SDOH_icon.ico")
+print("Created SDOH_icon.ico")
