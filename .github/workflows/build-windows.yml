@@ -30,10 +30,10 @@ jobs:
     - name: Check for data files
       run: |
         if (Test-Path "data") {
-          Write-Host "✓ Data directory found"
+          Write-Host "Data directory found"
           Get-ChildItem data -Name
         } else {
-          Write-Host "⚠ Warning: data directory not found"
+          Write-Host "Warning: data directory not found"
           Write-Host "Creating empty data directory for build"
           New-Item -ItemType Directory -Path data -Force
         }

@@ -33,6 +33,7 @@ jobs:
     - name: Create data directory
       run: |
         if (-not (Test-Path "data")) {
+          Write-Host "Creating data directory"
           New-Item -ItemType Directory -Path data -Force
         }
       shell: powershell
