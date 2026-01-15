@@ -1,4 +1,4 @@
-# OfflineGeoLocator v1.0.0 - Release Summary
+# OfflineGeoLocator v1.1.0 - Release Summary
 
 ## Build Complete! 🎉
 
@@ -96,9 +96,9 @@ Your modular OfflineGeoLocator application has been successfully built and packa
 2. **Create a release**:
    ```bash
    git add .
-   git commit -m "Release v1.0.0 - Modular packaging system"
-   git tag v1.0.0
-   git push origin main v1.0.0
+   git commit -m "Release v1.1.0 - Modular packaging system"
+   git tag v1.1.0
+   git push origin main v1.1.0
    ```
 
 3. **GitHub Actions will build**:
@@ -106,7 +106,7 @@ Your modular OfflineGeoLocator application has been successfully built and packa
    - Windows core app (automatically)
 
 4. **Upload state packages**:
-   - Manually upload all `state_packages/*.zip` to the v1.0.0 release
+   - Manually upload all `state_packages/*.zip` to the v1.1.0 release
    - Total upload: ~3.2GB
 
 ### Option 3: External Hosting for State Packages
@@ -191,5 +191,5 @@ Data sources:
 ---
 
 **Build Date**: October 27, 2025
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Build Type**: Modular (Core + State Packages)

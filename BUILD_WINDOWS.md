@@ -64,7 +64,7 @@ This will:
 1. Open **Inno Setup**
 2. File → Open → Select `installer_windows.iss`
 3. Build → Compile
-4. The installer will be created as `OfflineGeoSDOH-Installer-v1.0.0-Windows.exe`
+4. The installer will be created as `OfflineGeoSDOH-Installer-v1.1.0-Windows.exe`
 
 ## File Locations
 
@@ -80,7 +80,7 @@ dist\OfflineGeoSDOH.exe
 
 ### Installer location after compilation:
 ```
-OfflineGeoSDOH-Installer-v1.0.0-Windows.exe
+OfflineGeoSDOH-Installer-v1.1.0-Windows.exe
 ```
 
 ## Testing the Build
@@ -93,14 +93,14 @@ OfflineGeoSDOH-Installer-v1.0.0-Windows.exe
    - A browser window should open to http://localhost:5001
 
 2. **Test the installer:**
-   - Double-click `OfflineGeoSDOH-Installer-v1.0.0-Windows.exe`
+   - Double-click `OfflineGeoSDOH-Installer-v1.1.0-Windows.exe`
    - Follow the installation wizard
    - Launch the app from Start Menu or Desktop shortcut
 
 ## Distributing the Windows Version
 
 Upload to your GitHub release:
-1. The installer: `OfflineGeoSDOH-Installer-v1.0.0-Windows.exe` (~180MB)
+1. The installer: `OfflineGeoSDOH-Installer-v1.1.0-Windows.exe` (~180MB)
 2. Core data package: `core_data.zip`
 3. State packages: `state_*.zip` files
 

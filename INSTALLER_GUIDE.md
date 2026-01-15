@@ -3,12 +3,12 @@
 ## ✅ Installer Package Ready!
 
 Your Mac installer has been created:
-**File**: `OfflineGeoLocator-Installer-v1.0.0.pkg` (174MB)
+**File**: `OfflineGeoLocator-Installer-v1.1.0.pkg` (174MB)
 
 ## How Users Will Install and Use It
 
 ### Step 1: Download the Installer
-Users download `OfflineGeoLocator-Installer-v1.0.0.pkg` from your GitHub release
+Users download `OfflineGeoLocator-Installer-v1.1.0.pkg` from your GitHub release
 
 ### Step 2: Double-Click to Install
 - Double-click the `.pkg` file
@@ -53,12 +53,12 @@ When users launch the app for the first time:
 1. **Create a new release** at:
    https://github.com/emgoatee/OfflineGeoSDOH/releases/new
 
-2. **Tag**: `v1.0.0`
+2. **Tag**: `v1.1.0`
 
-3. **Title**: `v1.0.0 - Easy Install Package`
+3. **Title**: `v1.1.0 - Easy Install Package`
 
 4. **Upload these files**:
-   - `OfflineGeoLocator-Installer-v1.0.0.pkg` (174MB) - **The main installer**
+   - `OfflineGeoLocator-Installer-v1.1.0.pkg` (174MB) - **The main installer**
    - `state_packages/core_data.zip` (112MB) - Core CSV data
    - All `state_packages/state_*.zip` files (for manual downloads)
 
@@ -67,13 +67,13 @@ When users launch the app for the first time:
 ### Suggested Release Notes
 
 ```markdown
-# OfflineGeoLocator v1.0.0
+# OfflineGeoLocator v1.1.0
 
 Easy-to-install Mac application for offline geocoding and health index lookups.
 
 ## 🎉 New: One-Click Installer Package
 
-**Download**: `OfflineGeoLocator-Installer-v1.0.0.pkg` (174MB)
+**Download**: `OfflineGeoLocator-Installer-v1.1.0.pkg` (174MB)
 
 ### Installation
 1. Download the .pkg file
@@ -116,7 +116,7 @@ https://github.com/emgoatee/OfflineGeoSDOH/releases/latest
 
 **Direct installer download:**
 ```
-https://github.com/emgoatee/OfflineGeoSDOH/releases/download/v1.0.0/OfflineGeoLocator-Installer-v1.0.0.pkg
+https://github.com/emgoatee/OfflineGeoSDOH/releases/download/v1.1.0/OfflineGeoLocator-Installer-v1.1.0.pkg
 ```
 
 ## Technical Details
@@ -159,7 +159,7 @@ https://github.com/emgoatee/OfflineGeoSDOH/releases/download/v1.0.0/OfflineGeoLo
 
 ## File Locations
 
-- **Installer**: `/Users/tom6nz/Desktop/OfflineGeoLocator/OfflineGeoLocator-Installer-v1.0.0.pkg`
+- **Installer**: `/Users/tom6nz/Desktop/OfflineGeoLocator/OfflineGeoLocator-Installer-v1.1.0.pkg`
 - **State packages**: `/Users/tom6nz/Desktop/OfflineGeoLocator/state_packages/` (57 files)
 - **Source code**: Already on GitHub
 

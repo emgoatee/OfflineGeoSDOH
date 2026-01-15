@@ -2,7 +2,7 @@
 ; Download Inno Setup: https://jrsoftware.org/isinfo.php
 
 #define MyAppName "Offline GEO-SDOH"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.1.0"
 #define MyAppPublisher "GooteeMD"
 #define MyAppURL "https://github.com/emgoatee/OfflineGeoSDOH"
 #define MyAppExeName "OfflineGeoSDOH.exe"
