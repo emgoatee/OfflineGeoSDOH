@@ -33,35 +33,43 @@ To launch the app:
 fi
 
 # Check if server is already running
-if lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null 2>&1; then
-    # Server already running, just open browser
-    open "http://localhost:5001"
-    exit 0
+RUNNING_PID=$(lsof -Pi :5002 -sTCP:LISTEN -t)
+if [ ! -z "$RUNNING_PID" ]; then
+    # Something is listening. Is it ours?
+    if ps -p "$RUNNING_PID" -o comm= 2>/dev/null | grep -q "OfflineGeoLocator_executable"; then
+        echo "Updating: Replacing old server instance (PID $RUNNING_PID)..."
+        kill -9 "$RUNNING_PID" 2>/dev/null
+        sleep 1
+    else
+        # It's something else, just open the browser
+        open "http://localhost:5002"
+        exit 0
+    fi
 fi
 
 # Start the Flask server in the background
 ./OfflineGeoLocator_executable > /tmp/offlinegeolocator.log 2>&1 &
 SERVER_PID=$!
 
-# Wait for server to start (max 10 seconds)
-for i in {1..20}; do
-    if lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+# Wait for server to start (max 30 seconds)
+for i in {1..60}; do
+    if lsof -Pi :5002 -sTCP:LISTEN -t >/dev/null 2>&1; then
         break
     fi
     sleep 0.5
 done
 
 # Check if server started successfully
-if ! lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null 2>&1; then
+if ! lsof -Pi :5002 -sTCP:LISTEN -t >/dev/null 2>&1; then
     osascript -e 'display dialog "Failed to start OfflineGeoLocator server.\n\nCheck /tmp/offlinegeolocator.log for errors." buttons {"OK"} default button "OK" with title "OfflineGeoLocator Error" with icon stop'
     exit 1
 fi
 
 # Open default browser to the app
-open "http://localhost:5001"
+open "http://localhost:5002"
 
 # Show a notification
-osascript -e 'display notification "OfflineGeoLocator is running at http://localhost:5001" with title "OfflineGeoLocator Started"'
+osascript -e 'display notification "OfflineGeoLocator is running at http://localhost:5002" with title "OfflineGeoLocator Started"'
 
 # Keep the script running so the app stays in the Dock
 # When user quits from Dock, this will terminate and clean up the server

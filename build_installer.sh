@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "Building Offline GEO-SDOH v1.1.0 Installer"
+echo "Building Offline GEO-SDOH v1.1.1 Installer"
 echo "==========================================="
 echo ""
 
-VERSION="1.1.0"
+VERSION="1.1.1"
 APP_NAME="Offline GEO-SDOH"
 BUNDLE_ID="com.offlinegeolocator.app"
 

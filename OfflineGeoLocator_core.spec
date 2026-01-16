@@ -10,7 +10,6 @@ def get_core_data_files():
         'ACS_deprivation_index.csv',
         'ACS_deprivation_index_by_zipcode.csv',
         'COI_subdomin_data.csv',
-        'COI_subdomin_data.xlsx',
         'SVI_2022_US.csv',
         'adi.csv',
         'geodata.csv',

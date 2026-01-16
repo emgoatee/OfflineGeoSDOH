@@ -101,7 +101,7 @@ Users follow these steps:
 
 4. **Run**
    - Execute the app
-   - Browse to http://localhost:5001
+   - Browse to http://localhost:5002
 
 ## File Size Reference
 
@@ -193,8 +193,8 @@ git add .
 git commit -m "Description"
 
 # Create new version
-git tag v1.1.0
-git push origin main v1.1.0
+git tag v1.1.1
+git push origin main v1.1.1
 
 # GitHub Actions builds automatically
 # Upload state_packages/*.zip to new release manually

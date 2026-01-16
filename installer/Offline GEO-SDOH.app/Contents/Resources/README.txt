@@ -25,7 +25,7 @@ GETTING STARTED
 2. RUN THE APPLICATION
    - Double-click the OfflineGeoLocator executable
    - OR run from terminal: ./OfflineGeoLocator
-   - Open your web browser to: http://localhost:5001
+   - Open your web browser to: http://localhost:5002
 
 3. ENTER AN ADDRESS
    - Fill in the address form with a US street address
@@ -67,8 +67,8 @@ TROUBLESHOOTING
 Q: "Address not found"
 A: Make sure you've downloaded the state package for that address's state
 
-Q: Port 5001 already in use
-A: Another application is using port 5001. Close it or modify app.py
+Q: Port 5002 already in use
+A: Another application is using port 5002. Close it or modify app.py
 
 Q: Application won't start
 A: Check that you have the 'data' folder with at least core_data files

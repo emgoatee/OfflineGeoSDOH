@@ -109,7 +109,7 @@ Extract these into: `/Applications/OfflineGeoLocator.app/Contents/Resources/data
 
 - **Built with**: Flask, GeoPandas, Shapely, PyProj
 - **Data source**: Census TIGER/Line 2022 shapefiles
-- **Runs on**: http://localhost:5001
+- **Runs on**: http://localhost:5002
 - **Architecture**: Modular state packages
 - **Size reduction**: 94% smaller than monolithic version
 
@@ -123,7 +123,7 @@ Extract these into: `/Applications/OfflineGeoLocator.app/Contents/Resources/data
 ## 🐛 Known Issues
 
 - **macOS Security**: On first launch, you may need to right-click → Open if you get a security warning
-- **Port 5001**: Make sure port 5001 is not in use by another application
+- **Port 5002**: Make sure port 5002 is not in use by another application
 - **State Download**: Requires internet connection for initial state download
 
 ## 🆘 Support

@@ -26,7 +26,7 @@ SVI_PATH = resource_path("data/SVI_2022_US.csv")
 ADI_PATH = resource_path("data/adi.csv")
 ACS_PATH = resource_path("data/ACS_deprivation_index.csv")
 BROKAMP_PATH = resource_path("data/ACS_deprivation_index_by_zipcode.csv")
-COI_PATH = resource_path("data/COI_subdomin_data.xlsx")
+COI_PATH = resource_path("data/COI_subdomin_data.csv")
 
 # ----------- State setup
 STATE_FIPS = {
@@ -84,9 +84,11 @@ acs_df = fips_column(pd.read_csv(ACS_PATH, dtype=str))
 brokamp_df = pd.read_csv(BROKAMP_PATH, dtype=str)
 brokamp_df['Zip code'] = brokamp_df['Zip code'].astype(str).str.zfill(5)
 
-# Load COI Excel, GEOID as string and zero-padded
-coi_df = pd.read_excel(COI_PATH, dtype=str)
+# Load COI CSV, GEOID as string and zero-padded
+print(f"Loading COI from {COI_PATH}...", flush=True)
+coi_df = pd.read_csv(COI_PATH, dtype=str)
 coi_df['GEOID'] = coi_df['GEOID'].astype(str).str.zfill(11)
+print("COI loaded.", flush=True)
 
 # ----------- Tract files (state-level)
 app = Flask(__name__)
@@ -389,6 +391,6 @@ end tell
 
 if __name__ == "__main__":
     if getattr(sys, 'frozen', False):
-        app.run(debug=False, port=5001)
+        app.run(debug=False, port=5002)
     else:
-        app.run(debug=True, port=5001)
+        app.run(debug=True, port=5002)

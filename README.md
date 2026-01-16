@@ -16,7 +16,7 @@ A Mac application that performs **completely offline** geocoding of US addresses
 ### Quick Start - Mac Installer (Recommended)
 
 1. **Download the installer** from [Releases](https://github.com/emgoatee/OfflineGeoSDOH/releases/latest)
-   - File: `OfflineGeoLocator-Installer-v1.1.0.pkg`
+   - File: `OfflineGeoLocator-Installer-v1.1.1.pkg`
 
 2. **Install the package**
    - **Right-click** (or Control+click) on the `.pkg` file
@@ -49,7 +49,7 @@ A Mac application that performs **completely offline** geocoding of US addresses
 1. Welcome dialog explains state download needed
 2. Terminal opens with interactive state downloader
 3. Select which states you need (or download all)
-4. Browser opens automatically to http://localhost:5001
+4. Browser opens automatically to http://localhost:5002
 5. App is ready to use offline!
 
 ### File Sizes
@@ -92,7 +92,7 @@ After initial setup, OfflineGeoLocator works **100% offline**:
 ## Using the Application
 
 1. Launch OfflineGeoLocator from Applications
-2. Browser opens to http://localhost:5001
+2. Browser opens to http://localhost:5002
 3. Enter a US street address
 4. Select state from dropdown (only shows downloaded states)
 5. Click "Geocode Address"
@@ -130,7 +130,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The application will be available at http://localhost:5001
+The application will be available at http://localhost:5002
 
 ### Project Structure
 

@@ -2,7 +2,7 @@
 ; Download Inno Setup: https://jrsoftware.org/isinfo.php
 
 #define MyAppName "Offline GEO-SDOH"
-#define MyAppVersion "1.1.0"
+#define MyAppVersion "1.1.1"
 #define MyAppPublisher "GooteeMD"
 #define MyAppURL "https://github.com/emgoatee/OfflineGeoSDOH"
 #define MyAppExeName "OfflineGeoSDOH.exe"
@@ -26,8 +26,8 @@ SetupIconFile=SDOH_icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-ArchitecturesAllowed=x64
-ArchitecturesInstallIn64BitMode=x64
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
