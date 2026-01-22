@@ -80,15 +80,15 @@ def get_addr_range_cols(addr_gdf):
     else: raise Exception("No expected address range columns in addrfeat file")
 
 # ----------- Data Loading
-def fips_column(df, colname='FIPS'):
+def fips_column(df, colname='FIPS', length=11):
     if 'TRACT' in df.columns and colname not in df.columns:
         df.rename(columns={'TRACT': colname}, inplace=True)
-    df[colname] = df[colname].astype(str).str.zfill(11)
+    df[colname] = df[colname].astype(str).str.zfill(length)
     return df
 
 sdi_df = fips_column(pd.read_csv(CSV_PATH, dtype=str))
 svi_df = fips_column(pd.read_csv(SVI_PATH, dtype=str))
-adi_df = fips_column(pd.read_csv(ADI_PATH, dtype=str))
+adi_df = fips_column(pd.read_csv(ADI_PATH, dtype=str), length=12)
 acs_df = fips_column(pd.read_csv(ACS_PATH, dtype=str))
 
 # Load Brokamp by ZIP
@@ -222,7 +222,18 @@ def lookup_svi(tract_fips, df):
     }
 
 def lookup_adi(tract_fips, df):
+    # ADI is usually 12-digit Block Group. If we have 11-digit Tract, search by prefix.
+    tract_fips = str(tract_fips).zfill(11)
+    
+    # Try exact match first (in case we ever get 12-digit input)
     data = lookup_any_fips(tract_fips, df, "FIPS")
+    
+    if not data:
+        # Search for any block group starting with this tract FIPS
+        row = df[df["FIPS"].str.startswith(tract_fips)]
+        if not row.empty:
+            data = row.iloc[0].to_dict()
+            
     if not data: return None
     return {
         "ADI_NATRANK": data.get("ADI_NATRANK", ""),
