@@ -7,11 +7,22 @@ from shapely.geometry import Point
 import re
 import sys
 
+def get_user_data_dir():
+    """Get the platform-specific user data directory."""
+    home_dir = os.path.expanduser("~")
+    if sys.platform == "darwin":  # macOS
+        return os.path.join(home_dir, "Library", "Application Support", "OfflineGeoSDOH")
+    elif sys.platform == "win32":  # Windows
+        appdata = os.environ.get('APPDATA', home_dir)
+        return os.path.join(appdata, "OfflineGeoSDOH")
+    else:  # Linux/Other
+        return os.path.join(home_dir, ".local", "share", "OfflineGeoSDOH")
+
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller."""
-    # For data files, check user's Application Support folder first
+    # For data files, check user's Application Support / AppData folder first
     if relative_path.startswith("data/"):
-        user_data_path = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", relative_path)
+        user_data_path = os.path.join(get_user_data_dir(), relative_path)
         if os.path.exists(user_data_path):
             return user_data_path
 
@@ -114,20 +125,20 @@ def offline_geocode(street, zip_code, state_abbr):
     state_fips = STATE_ABBR_TO_FIPS[state_abbr]
     files = []
 
-    # Try Application Support folder first, then fall back to bundled/local
-    user_data_dir = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", "data")
+    # Try AppData/Application Support folder first, then fall back to bundled/local
+    user_data_dir = os.path.join(get_user_data_dir(), "data")
     if os.path.exists(user_data_dir):
         pattern = os.path.join(user_data_dir, f"tl_2022_{state_fips}*_addrfeat.shp")
         files = glob.glob(pattern)
-        print(f"[DEBUG] Checked Application Support: {len(files)} files found with pattern {pattern}", flush=True)
+        print(f"[DEBUG] Checked User Data Dir: {len(files)} files found with pattern {pattern}", flush=True)
         if files:
-            print(f"Using Application Support data: {len(files)} addrfeat files found", flush=True)
+            print(f"Using downloaded data: {len(files)} addrfeat files found", flush=True)
 
     # Fallback to bundled/local data
     if not files:
         pattern = resource_path(f"data/tl_2022_{state_fips}*_addrfeat.shp")
         files = glob.glob(pattern)
-        print(f"[DEBUG] Checked local data: {len(files)} files found with pattern {pattern}", flush=True)
+        print(f"[DEBUG] Checked bundled data: {len(files)} files found with pattern {pattern}", flush=True)
 
     if not files:
         print(f"No addrfeat files found for {state_abbr} (pattern: {pattern})", flush=True)
@@ -257,14 +268,14 @@ def lookup_coi(tract_fips, df):
 @app.route('/')
 def welcome():
     """Welcome page with options to check address or download states."""
-    # Check which states have been downloaded to Application Support directory
+    # Check which states have been downloaded to User Data directory
     # (not counting bundled/development data in local data/ directory)
     downloaded_states = []
-    user_data_dir = os.path.join(os.path.expanduser("~"), "Library", "Application Support", "OfflineGeoLocator", "data")
+    user_data_dir = os.path.join(get_user_data_dir(), "data")
 
     if os.path.exists(user_data_dir):
         for fips, abbr in STATE_FIPS.items():
-            # Only check Application Support directory (where downloaded states go)
+            # Only check User Data directory (where downloaded states go)
             pattern = os.path.join(user_data_dir, f"tl_2022_{fips}*_addrfeat.shp")
             if glob.glob(pattern):
                 # Verify tract file also exists
@@ -346,7 +357,7 @@ def download():
     # Get the path to download_states.py
     download_script = resource_path("download_states.py")
 
-    # Launch Terminal with the download script
+    # Launch Terminal/Command Prompt with the download script
     if sys.platform == 'darwin':  # macOS
         # Use osascript to open Terminal and run the script
         script = f'''
@@ -356,10 +367,19 @@ tell application "Terminal"
 
 Download complete!
 
-Close this window and refresh the OfflineGeoLocator welcome page to see your new states.' && read -p 'Press Enter to close...'"
+Download complete!
+
+Close this window and refresh the Offline GEO-SDOH welcome page to see your new states.' && read -p 'Press Enter to close...'"
 end tell
 '''
         subprocess.Popen(['osascript', '-e', script])
+    elif sys.platform == 'win32':  # Windows
+        # On Windows, we can use 'start' to open a new command prompt
+        # We use 'cmd /k' so the window stays open after the script finished
+        # If frozen, we need to run the bundled python or assume python is in path
+        # Actually, if we're bundled, it's easier to launch the exe or script
+        cmd = f'start cmd /k "cd /d "{os.path.dirname(download_script)}" && python download_states.py"'
+        subprocess.Popen(cmd, shell=True)
     else:
         # For other platforms, just run it in the background
         subprocess.Popen(['python3', download_script])

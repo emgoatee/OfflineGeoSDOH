@@ -1,20 +1,25 @@
-# OfflineGeoLocator Installer Guide
+# OfflineGeoLocator Distribution Guide
 
-## ✅ Installer Package Ready!
+## ✅ Professional Distribution Ready!
 
-Your Mac installer has been created:
-**File**: `OfflineGeoLocator-Installer-v1.1.1.pkg` (174MB)
+Your signed and notarized app bundle is ready for professional distribution.
 
-## How Users Will Install and Use It
+**Recommended File**: `OfflineGeoLocator-v1.1.1-macOS.zip` (96MB)
+- ✅ **Signed** with your Developer ID
+- ✅ **Notarized** by Apple
+- ✅ **Warning-free** installation
 
-### Step 1: Download the Installer
-Users download `OfflineGeoLocator-Installer-v1.1.1.pkg` from your GitHub release
+**Alternative**: `OfflineGeoLocator-Installer-v1.1.1.pkg` (95MB)
+- ⚠️ Unsigned (users will see a security warning)
 
-### Step 2: Double-Click to Install
-- Double-click the `.pkg` file
-- macOS Installer will open with a welcome screen
-- Click "Continue" and follow the prompts
-- The app will be installed to `/Applications/OfflineGeoLocator.app`
+## How Users Will Install and Use It (Recommended ZIP)
+
+### Step 1: Download the ZIP
+Users download `OfflineGeoLocator-v1.1.1-macOS.zip` from your GitHub release.
+
+### Step 2: Extract and Move
+- Extract the ZIP file.
+- Move `OfflineGeoSDOH` (the app) to the **Applications** folder.
 
 ### Step 3: First Launch
 When users launch the app for the first time:
@@ -58,7 +63,8 @@ When users launch the app for the first time:
 3. **Title**: `v1.1.1 - Easy Install Package`
 
 4. **Upload these files**:
-   - `OfflineGeoLocator-Installer-v1.1.1.pkg` (174MB) - **The main installer**
+   - `OfflineGeoLocator-v1.1.1-macOS.zip` (96MB) - **The recommended professional version**
+   - `OfflineGeoLocator-Installer-v1.1.1.pkg` (95MB) - (Unsigned fallback)
    - `state_packages/core_data.zip` (112MB) - Core CSV data
    - All `state_packages/state_*.zip` files (for manual downloads)
 
@@ -71,15 +77,15 @@ When users launch the app for the first time:
 
 Easy-to-install Mac application for offline geocoding and health index lookups.
 
-## 🎉 New: One-Click Installer Package
+## 🎉 Professional Distribution Ready
 
-**Download**: `OfflineGeoLocator-Installer-v1.1.1.pkg` (174MB)
+**Recommended Download**: `OfflineGeoLocator-v1.1.1-macOS.zip` (96MB)
 
-### Installation
-1. Download the .pkg file
-2. Double-click to install
-3. Launch from Applications folder
-4. Download states on first run
+### Installation (ZIP)
+1. Download the .zip file
+2. Extract to your **Applications** folder
+3. Launch `OfflineGeoSDOH`
+4. macOS will verify and open it immediately (No security warnings)
 
 That's it! The app handles everything else automatically.
 
@@ -119,6 +125,27 @@ https://github.com/emgoatee/OfflineGeoSDOH/releases/latest
 https://github.com/emgoatee/OfflineGeoSDOH/releases/download/v1.1.1/OfflineGeoLocator-Installer-v1.1.1.pkg
 ```
 
+## 🔐 Security Troubleshooting (macOS)
+
+Because the installer is not digitally signed through the Apple Developer Program, macOS Gatekeeper will block it by default.
+
+### If you see "Apple could not verify..." or "Blocked":
+
+1. **Attempt to open** the installer (it will fail with the warning).
+2. Open **System Settings** (or System Preferences).
+3. Go to **Privacy & Security**.
+4. Scroll down to the **Security** section.
+5. You will see a message: `"OfflineGeoLocator-Installer-v1.1.1.pkg" was blocked from use because it is not from an identified developer.`
+6. Click **Open Anyway**.
+7. Enter your Mac password when prompted.
+8. A final box will appear asking if you are sure—click **Open**.
+
+> [!TIP]
+> **Advanced Users**: You can also use the terminal to remove the "quarantine" flag that causes this warning:
+> `xattr -d com.apple.quarantine ~/Downloads/OfflineGeoLocator-Installer-v1.1.1.pkg`
+
+---
+
 ## Technical Details
 
 ### What's Included in the Installer:
@@ -152,17 +179,31 @@ https://github.com/emgoatee/OfflineGeoSDOH/releases/download/v1.1.1/OfflineGeoLo
 
 ## Next Steps
 
-1. ✅ Installer created
-2. ⏳ Upload to GitHub release
-3. ⏳ Test installation on a clean Mac
-4. ⏳ Share link with users
-
-## File Locations
-
 - **Installer**: `/Users/tom6nz/Desktop/OfflineGeoLocator/OfflineGeoLocator-Installer-v1.1.1.pkg`
 - **State packages**: `/Users/tom6nz/Desktop/OfflineGeoLocator/state_packages/` (57 files)
 - **Source code**: Already on GitHub
+- **Credentials**: `.env` (contains private signing keys - **DO NOT SHARE**)
 
 ---
 
-**Ready to distribute!** 🚀
+## 🔏 Automated Signing & Notarization
+
+The project now includes automated signing and notarization in the `build_installer.sh` script.
+
+### Setup
+
+1.  **Credentials**: Ensure you have a `.env` file based on `signing_credentials.template.env` with your Apple ID and App-Specific Password.
+2.  **Identities**: Your machine should have the "Developer ID Application" and "Developer ID Installer" certificates installed in KeyChain.
+3.  **Run Build**: Simply run `./build_installer.sh`.
+
+### What it does:
+1.  **Codesigns** the `.app` bundle (required for Gatekeeper).
+2.  **Signs** the `.pkg` component and distribution packages.
+3.  **Submits** to Apple for notarization.
+4.  **Staples** the notarization ticket to the final `.pkg`.
+
+Once the build finishes with "Status: SIGNED and NOTARIZED", users will be able to install the app without any security warnings!
+
+---
+
+**Ready to distribute professionally!** 🚀
