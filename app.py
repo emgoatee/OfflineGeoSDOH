@@ -150,7 +150,7 @@ def offline_geocode(street, zip_code, state_abbr):
     # Try AppData/Application Support folder first, then fall back to bundled/local
     user_data_dir = os.path.join(get_user_data_dir(), "data")
     if os.path.exists(user_data_dir):
-        pattern = os.path.join(user_data_dir, f"tl_2022_{state_fips}*_addrfeat.shp")
+        pattern = os.path.join(user_data_dir, f"tl_*_{state_fips}*_addrfeat.shp")
         files = glob.glob(pattern)
         print(f"[DEBUG] Checked User Data Dir: {len(files)} files found with pattern {pattern}", flush=True)
         if files:
@@ -158,7 +158,7 @@ def offline_geocode(street, zip_code, state_abbr):
 
     # Fallback to bundled/local data
     if not files:
-        pattern = resource_path(f"data/tl_2022_{state_fips}*_addrfeat.shp")
+        pattern = resource_path(f"data/tl_*_{state_fips}*_addrfeat.shp")
         files = glob.glob(pattern)
         print(f"[DEBUG] Checked bundled data: {len(files)} files found with pattern {pattern}", flush=True)
 
