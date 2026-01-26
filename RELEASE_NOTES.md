@@ -1,4 +1,10 @@
-# OfflineGeoLocator v1.1.3 - Release Notes
+# OfflineGeoLocator v1.1.4 - Release Notes
+
+## 🛡 Security & Distribution
+- **Official Notarization**: This release is now fully signed and notarized by Apple. It should open immediately on all macOS machines without "damaged" or "unknown developer" warnings.
+
+---
+
 
 ## 🛠 Fixes
 - **State Download Fix**: Fixed an issue where the state downloader would fail with a 404 error. It now robustly points to the stable data release.
