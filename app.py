@@ -88,7 +88,29 @@ def fips_column(df, colname='FIPS', length=11):
 
 sdi_df = fips_column(pd.read_csv(CSV_PATH, dtype=str))
 svi_df = fips_column(pd.read_csv(SVI_PATH, dtype=str))
-adi_df = fips_column(pd.read_csv(ADI_PATH, dtype=str), length=12)
+# ADI CSV has scientific notation - use Decimal for full precision
+from decimal import Decimal
+def parse_fips(val):
+    try:
+        # Use Decimal to preserve all digits from scientific notation
+        return str(int(Decimal(str(val))))
+    except:
+        return str(val)
+
+adi_df = pd.read_csv(ADI_PATH, converters={'FIPS': parse_fips}, dtype={'ADI_NATRANK': str, 'ADI_STATERNK': str})
+adi_df = fips_column(adi_df, length=12)
+
+# Check for data corruption (scientific notation artifacts often cause duplicates like 1.0001E+11 -> 110010000000)
+# If identical FIPS codes appear many times, it's a sign of precision loss.
+adi_dupes = adi_df['FIPS'].duplicated()
+if adi_dupes.sum() > 100:  # A simplistic threshold; real data shouldn't have many duplicates
+    print("\n" + "!"*80)
+    print("CRITICAL WARNING: High number of duplicate FIPS codes detected in 'data/adi.csv'.")
+    print(f"Found {adi_dupes.sum()} duplicates. This strongly suggests the file was saved in Excel")
+    print("without formatting the 'FIPS' column as Text, causing scientific notation truncation.")
+    print("Example corrupted FIPS: " + str(adi_df[adi_dupes]['FIPS'].iloc[0]))
+    print("PLEASE REPLACE 'data/adi.csv' WITH A CLEAN COPY FROM THE SOURCE.")
+    print("!"*80 + "\n")
 acs_df = fips_column(pd.read_csv(ACS_PATH, dtype=str))
 
 # Load Brokamp by ZIP

@@ -5,7 +5,7 @@ echo "Building Offline GEO-SDOH v1.1.1 Installer"
 echo "==========================================="
 echo ""
 
-VERSION="1.1.1"
+VERSION="1.1.2"
 APP_NAME="Offline GEO-SDOH"
 BUNDLE_ID="com.offlinegeolocator.app"
 
@@ -44,10 +44,10 @@ fi
 if [ ! -z "$APPLE_SIGNING_IDENTITY" ]; then
     echo "Step 1: Signing app bundle..."
     # Sign all nested binaries, frameworks, and dylibs
-    find "$APP_PATH" -type f \( -name "*.dylib" -o -name "*.so" -o -name "OfflineGeoLocator_executable" \) -exec codesign --force --options runtime --sign "$APPLE_SIGNING_IDENTITY" --timestamp {} +
+    find "$APP_PATH" -type f \( -name "*.dylib" -o -name "*.so" -o -name "OfflineGeoLocator_executable" \) -exec codesign --force --options runtime --entitlements entitlements.plist --sign "$APPLE_SIGNING_IDENTITY" --timestamp {} +
     
     # Sign the main bundle
-    codesign --force --options runtime --sign "$APPLE_SIGNING_IDENTITY" --timestamp "$APP_PATH"
+    codesign --force --options runtime --entitlements entitlements.plist --sign "$APPLE_SIGNING_IDENTITY" --timestamp "$APP_PATH"
     
     echo "✓ App bundle signed."
     echo ""

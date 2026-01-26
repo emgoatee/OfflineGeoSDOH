@@ -1,4 +1,12 @@
-# OfflineGeoLocator v1.0.1 - Mac Installer Package
+# OfflineGeoLocator v1.1.2 - Release Notes
+
+## 🛠 Fixes & Improvements
+- **ADI Data Fix**: Added robust detection for corrupted ADI data files (caused by Excel scientific notation).
+- **New Tool**: Included `clean_adi_data.py` for safely processing fresh ADI data downloads without corruption.
+- **Error Handling**: Improved warning messages when data files are detected to be invalid.
+
+---
+
 
 🎉 **Easy one-click installer for macOS!**
 
