@@ -1,4 +1,10 @@
-# OfflineGeoLocator v1.1.2 - Release Notes
+# OfflineGeoLocator v1.1.3 - Release Notes
+
+## 🛠 Fixes
+- **State Download Fix**: Fixed an issue where the state downloader would fail with a 404 error. It now robustly points to the stable data release.
+
+---
+
 
 ## 🛠 Fixes & Improvements
 - **ADI Data Fix**: Added robust detection for corrupted ADI data files (caused by Excel scientific notation).
