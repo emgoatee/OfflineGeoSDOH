@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Building Offline GEO-SDOH v1.1.1 Installer"
+echo "Building Offline GEO-SDOH v$VERSION Installer"
 echo "==========================================="
 echo ""
 
