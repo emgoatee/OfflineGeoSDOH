@@ -12,7 +12,8 @@ from pathlib import Path
 
 # Replace with your actual GitHub release URL
 GITHUB_RELEASE_URL = "https://github.com/emgoatee/OfflineGeoSDOH/releases/download"
-DEFAULT_VERSION = "v1.1.0"
+DEFAULT_VERSION = "v1.1.4"
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 
 STATE_FIPS = {
     '01': 'AL - Alabama',
@@ -84,7 +85,8 @@ def get_data_dir():
     else:  # Linux/Other
         data_dir = os.path.join(home_dir, ".local", "share", "OfflineGeoSDOH", "data")
 
-    # Make sure it exists
+    # Normalize path and make sure it exists
+    data_dir = os.path.normpath(data_dir)
     os.makedirs(data_dir, exist_ok=True)
     return data_dir
 
@@ -119,7 +121,12 @@ def download_state(state_abbr, version=DEFAULT_VERSION):
         temp_dir = tempfile.gettempdir()
         zip_path = os.path.join(temp_dir, f"state_{state_abbr}.zip")
 
-        urllib.request.urlretrieve(url, zip_path)
+        # Create a request with a User-Agent to avoid being blocked
+        req = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
+        
+        with urllib.request.urlopen(req) as response, open(zip_path, 'wb') as out_file:
+            data = response.read()
+            out_file.write(data)
 
         # Extract to data directory
         print(f"Extracting to {data_dir}...")
@@ -183,15 +190,20 @@ def interactive_mode():
             continue
 
         # Download states
+        success_count = 0
         for state in valid_states:
             if state in installed:
                 print(f"\n{state} is already installed. Skipping...")
                 continue
 
-            download_state(state)
+            if download_state(state):
+                success_count += 1
 
-        print("\nDownload complete!")
-        print("Please restart the application for changes to take effect.")
+        if success_count > 0:
+            print(f"\n✓ {success_count} state(s) installed successfully!")
+            print("Please restart the application to use your new data.")
+        else:
+            print("\n✗ No states were installed. Please check your internet connection or the release version.")
         break
 
 def main():

@@ -20,16 +20,19 @@ def get_user_data_dir():
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller."""
+    # Split the relative path to handle different OS separators in input
+    parts = relative_path.replace("\\", "/").split("/")
+    
     # For data files, check user's Application Support / AppData folder first
-    if relative_path.startswith("data/"):
-        user_data_path = os.path.join(get_user_data_dir(), relative_path)
+    if parts[0] == "data":
+        user_data_path = os.path.join(get_user_data_dir(), *parts)
         if os.path.exists(user_data_path):
-            return user_data_path
+            return os.path.normpath(user_data_path)
 
     # Fall back to bundled resources
     if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath("."), relative_path)
+        return os.path.normpath(os.path.join(sys._MEIPASS, *parts))
+    return os.path.normpath(os.path.join(os.path.abspath("."), *parts))
 
 # ----------- File paths
 CSV_PATH = resource_path("data/geodata.csv")
@@ -88,29 +91,42 @@ def fips_column(df, colname='FIPS', length=11):
 
 sdi_df = fips_column(pd.read_csv(CSV_PATH, dtype=str))
 svi_df = fips_column(pd.read_csv(SVI_PATH, dtype=str))
-# ADI CSV has scientific notation - use Decimal for full precision
-from decimal import Decimal
-def parse_fips(val):
+# Load ADI data with corruption detection
+def parse_fips_adi(val):
     try:
-        # Use Decimal to preserve all digits from scientific notation
-        return str(int(Decimal(str(val))))
+        from decimal import Decimal
+        s_val = str(val).strip().upper()
+        if 'E+' in s_val:
+            return "CORRUPTED"
+        return str(int(Decimal(s_val)))
     except:
         return str(val)
 
-adi_df = pd.read_csv(ADI_PATH, converters={'FIPS': parse_fips}, dtype={'ADI_NATRANK': str, 'ADI_STATERNK': str})
-adi_df = fips_column(adi_df, length=12)
+if os.path.exists(ADI_PATH):
+    adi_df = pd.read_csv(ADI_PATH, converters={'FIPS': parse_fips_adi}, dtype={'ADI_NATRANK': str, 'ADI_STATERNK': str})
+    
+    # Detect corruption via "CORRUPTED" flag or excessive duplicates
+    corrupted_count = (adi_df['FIPS'] == "CORRUPTED").sum()
+    duplicate_count = adi_df['FIPS'].duplicated().sum()
+    
+    if corrupted_count > 0 or duplicate_count > 100:
+        print("\n" + "!"*80)
+        print("CRITICAL WARNING: ADI data in 'data/adi.csv' appears to be CORRUPTED.")
+        print("This usually happens if the CSV was saved in Excel with scientific notation.")
+        print(f"Detected {corrupted_count} explicit scientific notation entries and {duplicate_count} duplicates.")
+        print("ADI data will NOT be available in the results until this file is replaced.")
+        print("!"*80 + "\n")
+        adi_corrupted = True
+    else:
+        adi_corrupted = False
+    
+    # Ensure correct length and type
+    adi_df['FIPS'] = adi_df['FIPS'].astype(str).str.zfill(12)
+else:
+    print(f"WARNING: ADI data file not found at {ADI_PATH}")
+    adi_df = pd.DataFrame()
+    adi_corrupted = False
 
-# Check for data corruption (scientific notation artifacts often cause duplicates like 1.0001E+11 -> 110010000000)
-# If identical FIPS codes appear many times, it's a sign of precision loss.
-adi_dupes = adi_df['FIPS'].duplicated()
-if adi_dupes.sum() > 100:  # A simplistic threshold; real data shouldn't have many duplicates
-    print("\n" + "!"*80)
-    print("CRITICAL WARNING: High number of duplicate FIPS codes detected in 'data/adi.csv'.")
-    print(f"Found {adi_dupes.sum()} duplicates. This strongly suggests the file was saved in Excel")
-    print("without formatting the 'FIPS' column as Text, causing scientific notation truncation.")
-    print("Example corrupted FIPS: " + str(adi_df[adi_dupes]['FIPS'].iloc[0]))
-    print("PLEASE REPLACE 'data/adi.csv' WITH A CLEAN COPY FROM THE SOURCE.")
-    print("!"*80 + "\n")
 acs_df = fips_column(pd.read_csv(ACS_PATH, dtype=str))
 
 # Load Brokamp by ZIP
@@ -380,7 +396,8 @@ def geocode():
         adi_data=adi_data,
         acs_data=acs_data,
         acs_zip_data=acs_zip_data,
-        coi_data=coi_data
+        coi_data=coi_data,
+        adi_corrupted=adi_corrupted
     )
 
 @app.route('/download')
@@ -393,12 +410,11 @@ def download():
     # Launch Terminal/Command Prompt with the download script
     if sys.platform == 'darwin':  # macOS
         # Use osascript to open Terminal and run the script
+        # We use quoted form of to handle spaces in paths
         script = f'''
 tell application "Terminal"
     activate
-    do script "cd '{os.path.dirname(download_script)}' && python3 download_states.py && echo '
-
-Download complete!
+    do script "cd \\"{os.path.dirname(download_script)}\\" && python3 \\"{os.path.basename(download_script)}\\" && echo '
 
 Download complete!
 
@@ -407,11 +423,9 @@ end tell
 '''
         subprocess.Popen(['osascript', '-e', script])
     elif sys.platform == 'win32':  # Windows
-        # On Windows, we can use 'start' to open a new command prompt
-        # We use 'cmd /k' so the window stays open after the script finished
-        # If frozen, we need to run the bundled python or assume python is in path
-        # Actually, if we're bundled, it's easier to launch the exe or script
-        cmd = f'start cmd /k "cd /d "{os.path.dirname(download_script)}" && python download_states.py"'
+        # On Windows, use 'cmd /k' so the window stays open. 
+        # Use quotes around paths to handle spaces.
+        cmd = f'start cmd /k "cd /d \\"{os.path.dirname(download_script)}\\" && python \\"{os.path.basename(download_script)}\\""'
         subprocess.Popen(cmd, shell=True)
     else:
         # For other platforms, just run it in the background

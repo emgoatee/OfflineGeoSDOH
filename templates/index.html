@@ -199,12 +199,24 @@
     </form>
     <div class="loading" id="loading"> Searching... Please wait. </div>
 
+    {% if result or svi_data or adi_data or acs_data or acs_zip_data or coi_data or adi_corrupted %}
+    {% if adi_corrupted %}
+    <div
+        style="background: #fff3cd; color: #856404; padding: 15px 22px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #ffeeba; line-height: 1.4;">
+        ⚠️ <b>Data File Warning:</b> The <code>data/adi.csv</code> file appears to be corrupted (scientific notation
+        detected).
+        ADI results cannot be displayed. Please replace it with a clean copy and ensure the FIPS column is kept as
+        "Text" if opening in Excel.
+    </div>
+    {% endif %}
+
     {% if result or svi_data or adi_data or acs_data or acs_zip_data or coi_data %}
     <div
         style="background: rgb(239, 204, 224); color: #333333; padding: 12px 22px; border-radius: 10px; margin-bottom: 15px; font-weight: 600;">
         ✅ Address processed{% if result %}, Social Deprivation Index (SDI) Tract - FIPS: <b>{{ result.FIPS }}</b>{%
         endif %}.
     </div>
+    {% endif %}
     <div class="result">
 
         {% if adi_data %}
