@@ -4,18 +4,18 @@
 
 Your signed and notarized app bundle is ready for professional distribution.
 
-**Recommended File**: `OfflineGeoLocator-v1.1.1-macOS.zip` (96MB)
+**Recommended File**: `OfflineGeoLocator-v1.1.4-macOS.zip` (96MB)
 - ✅ **Signed** with your Developer ID
 - ✅ **Notarized** by Apple
 - ✅ **Warning-free** installation
 
-**Alternative**: `OfflineGeoLocator-Installer-v1.1.1.pkg` (95MB)
+**Alternative**: `OfflineGeoLocator-Installer-v1.1.4.pkg` (95MB)
 - ⚠️ Unsigned (users will see a security warning)
 
 ## How Users Will Install and Use It (Recommended ZIP)
 
 ### Step 1: Download the ZIP
-Users download `OfflineGeoLocator-v1.1.1-macOS.zip` from your GitHub release.
+Users download `OfflineGeoLocator-v1.1.4-macOS.zip` from your GitHub release.
 
 ### Step 2: Extract and Move
 - Extract the ZIP file.
@@ -58,13 +58,13 @@ When users launch the app for the first time:
 1. **Create a new release** at:
    https://github.com/emgoatee/OfflineGeoSDOH/releases/new
 
-2. **Tag**: `v1.1.1`
+2. **Tag**: `v1.1.4`
 
-3. **Title**: `v1.1.1 - Easy Install Package`
+3. **Title**: `v1.1.4 - Easy Install Package`
 
 4. **Upload these files**:
-   - `OfflineGeoLocator-v1.1.1-macOS.zip` (96MB) - **The recommended professional version**
-   - `OfflineGeoLocator-Installer-v1.1.1.pkg` (95MB) - (Unsigned fallback)
+   - `OfflineGeoLocator-v1.1.4-macOS.zip` (96MB) - **The recommended professional version**
+   - `OfflineGeoLocator-Installer-v1.1.4.pkg` (95MB) - (Unsigned fallback)
    - `state_packages/core_data.zip` (112MB) - Core CSV data
    - All `state_packages/state_*.zip` files (for manual downloads)
 
@@ -127,7 +127,9 @@ https://github.com/emgoatee/OfflineGeoSDOH/releases/download/v1.1.1/OfflineGeoLo
 
 ## 🔐 Security Troubleshooting (macOS)
 
-Because the installer is not digitally signed through the Apple Developer Program, macOS Gatekeeper will block it by default.
+**If coworkers can't install on their Macs**, see **[INSTALL_TROUBLESHOOTING.md](INSTALL_TROUBLESHOOTING.md)** for full causes and solutions (signing/notarization, Right-click → Open, Intel vs Apple Silicon).
+
+Because the installer may not be digitally signed through the Apple Developer Program, macOS Gatekeeper can block it by default.
 
 ### If you see "Apple could not verify..." or "Blocked":
 
