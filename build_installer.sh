@@ -42,7 +42,7 @@ if [ ! -z "$APPLE_SIGNING_IDENTITY" ]; then
     xattr -cr "$APP_PATH"
     
     echo "  Setting permissions and timestamps..."
-    find "$APP_PATH" -exec touch {} +
+    find "$APP_PATH" -type f -print0 | xargs -0 touch 2>/dev/null || true
     chmod +x "$APP_PATH/Contents/MacOS/launcher"
     chmod +x "$APP_PATH/Contents/Resources/OfflineGeoLocator_executable"
     
