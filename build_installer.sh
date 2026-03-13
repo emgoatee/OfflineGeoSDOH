@@ -2,7 +2,7 @@
 set -e
 
 # Load metadata
-VERSION="1.1.4"
+VERSION="${VERSION:-1.1.4}"
 APP_NAME="Offline GEO-SDOH"
 BUNDLE_ID="com.offlinegeolocator.app"
 

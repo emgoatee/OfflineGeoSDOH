@@ -58,8 +58,87 @@ jobs:
         path: OfflineGeoSDOH-Installer-v*-Windows.exe
         retention-days: 7
 
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Create data directory
+      run: mkdir -p data
+
+    - name: Build with PyInstaller
+      run: pyinstaller OfflineGeoLocator_core.spec --clean
+
+    - name: Copy executable into app bundle
+      run: |
+        cp "dist/OfflineGeoLocator" "installer/Offline GEO-SDOH.app/Contents/Resources/OfflineGeoLocator_executable"
+        chmod +x "installer/Offline GEO-SDOH.app/Contents/Resources/OfflineGeoLocator_executable"
+
+    - name: Set up code signing
+      if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+      env:
+        APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+        APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      run: |
+        KEYCHAIN_PATH="$RUNNER_TEMP/signing.keychain"
+        KEYCHAIN_PASSWORD="temp-keychain-password"
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+        security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+        echo "$APPLE_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
+        security import "$RUNNER_TEMP/certificate.p12" \
+          -k "$KEYCHAIN_PATH" \
+          -P "$APPLE_CERTIFICATE_PASSWORD" \
+          -T /usr/bin/codesign
+        security list-keychain -d user -s "$KEYCHAIN_PATH"
+        security set-key-partition-list -S apple-tool:,apple: -s \
+          -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+    - name: Get version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Build installer package
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+        APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+        APPLE_INSTALLER_IDENTITY: ${{ secrets.APPLE_INSTALLER_IDENTITY }}
+        APPLE_ID: ${{ secrets.APPLE_ID }}
+        APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+        APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      run: |
+        chmod +x build_installer.sh
+        ./build_installer.sh
+
+    - name: Upload Mac artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mac-installer
+        path: |
+          OfflineGeoLocator-v*-macOS.zip
+          OfflineGeoLocator-Installer-v*.pkg
+        retention-days: 7
+
   create-release:
-    needs: [build-windows]
+    needs: [build-windows, build-mac]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
@@ -73,6 +152,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: windows-installer
+
+    - name: Download Mac Installer
+      uses: actions/download-artifact@v4
+      with:
+        name: mac-installer
 
     - name: Get tag name
       id: tag
@@ -96,10 +180,11 @@ jobs:
             - ~180MB download
 
           ### macOS
-          - **Mac Installer**: `OfflineGeoLocator-Installer-v${{ steps.tag.outputs.tag }}.pkg`
-            - Upload this manually from your Mac build
+          - **Mac App (ZIP)**: `OfflineGeoLocator-v${{ steps.tag.outputs.tag }}-macOS.zip`
+            - Extract and move to Applications
             - For macOS 10.13 or later
-            - ~176MB download
+          - **Mac Installer (PKG)**: `OfflineGeoLocator-Installer-v${{ steps.tag.outputs.tag }}.pkg`
+            - One-click installer (if available)
 
           ### Data Packages (All Platforms)
           - **Core Data** (Required): `core_data.zip`
@@ -118,10 +203,10 @@ jobs:
           4. Download states on first run
 
           ### macOS
-          1. Download `OfflineGeoLocator-Installer-v${{ steps.tag.outputs.tag }}.pkg`
-          2. Right-click → Open (to bypass Gatekeeper)
-          3. Follow installation prompts
-          4. Launch from Applications folder
+          1. Download `OfflineGeoLocator-v${{ steps.tag.outputs.tag }}-macOS.zip`
+          2. Extract and drag `Offline GEO-SDOH.app` to Applications
+          3. Right-click → Open (to bypass Gatekeeper on first launch)
+          4. Download states on first run
 
           ## System Requirements
 
@@ -137,6 +222,8 @@ jobs:
           Developed by [GooteeMD](https://www.linkedin.com/in/ecem-tombas/)
         files: |
           OfflineGeoSDOH-Installer-v*-Windows.exe
+          OfflineGeoLocator-v*-macOS.zip
+          OfflineGeoLocator-Installer-v*.pkg
         draft: false
         prerelease: false
       env:
