@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# OfflineGeoLocator Launcher Script
+# Offline GEO-SDOH Launcher Script
 # This script starts the Flask server and opens the web interface
 
 # Get the directory where this script is located
@@ -10,33 +10,51 @@ RESOURCES_DIR="$DIR/../Resources"
 # Change to the Resources directory
 cd "$RESOURCES_DIR"
 
-# Check if this is the first run (no state shapefiles downloaded yet)
-USER_DATA_DIR="$HOME/Library/Application Support/OfflineGeoLocator/data"
-# Check if any tract shapefiles exist (these are downloaded by users)
-if ! ls "$USER_DATA_DIR"/tl_2022_*_tract.shp >/dev/null 2>&1; then
-    # Show welcome message
-    osascript -e 'display dialog "Welcome to OfflineGeoLocator!\n\nThis is your first time running the app. You need to download state data packages to use the geocoding features.\n\nThe state downloader will open in Terminal. Follow the prompts to download the states you need.\n\nAfter downloading states, close the Terminal window and launch the app again from Applications." buttons {"OK"} default button "OK" with title "OfflineGeoLocator - First Run"'
+# Paths
+OLD_USER_DATA_DIR="$HOME/Library/Application Support/OfflineGeoLocator"
+NEW_USER_DATA_DIR="$HOME/Library/Application Support/OfflineGeoSDOH"
+NEW_DATA_DIR="$NEW_USER_DATA_DIR/data"
 
-    # Open Terminal and run the state downloader
-    osascript -e 'tell application "Terminal"
-        do script "cd '"'$RESOURCES_DIR'"' && python3 download_states.py && echo '\''
+# --- Step 0: Data Migration ---
+if [ -d "$OLD_USER_DATA_DIR" ] && [ ! -d "$NEW_USER_DATA_DIR" ]; then
+    echo "Migrating data from old directory..."
+    mkdir -p "$HOME/Library/Application Support"
+    mv "$OLD_USER_DATA_DIR" "$NEW_USER_DATA_DIR"
+    echo "✓ Data migrated to OfflineGeoSDOH."
+fi
+
+# Ensure the new data directory exists
+mkdir -p "$NEW_DATA_DIR"
+
+# Check if this is the first run (no state shapefiles downloaded yet)
+# Check if any tract shapefiles exist (these are downloaded by users)
+if ! ls "$NEW_DATA_DIR"/tl_2022_*_tract.shp >/dev/null 2>&1; then
+    # Show welcome message with bypass option
+    RESPONSE=$(osascript -e 'button returned of (display dialog "Welcome to Offline GEO-SDOH!\n\nThis is your first time running the app. You need to download state data packages to use the geocoding features.\n\nThe state downloader will open in Terminal. Follow the prompts to download the states you need.\n\nAfter downloading states, close the Terminal window and launch the app again from Applications." buttons {"Download States", "Start App Anyway"} default button "Download States" with title "Offline GEO-SDOH - First Run")')
+
+    if [ "$RESPONSE" = "Download States" ]; then
+        # Open Terminal and run the state downloader
+        osascript -e 'tell application "Terminal"
+            do script "cd '"'$RESOURCES_DIR'"' && python3 download_states.py && echo '\''
 
 State download complete!
 
 To launch the app:
 1. Close this Terminal window
-2. Open OfflineGeoLocator from Applications folder
+2. Open Offline GEO-SDOH from Applications folder
 3. Your browser will open automatically'\'' && read -p '\''Press any key to exit...'\'' && exit"
-    end tell'
-
-    exit 0
+        end tell'
+        exit 0
+    fi
+    # If "Start App Anyway" was clicked, fall through to start the server
 fi
 
 # Check if server is already running
 RUNNING_PID=$(lsof -Pi :5002 -sTCP:LISTEN -t)
 if [ ! -z "$RUNNING_PID" ]; then
     # Something is listening. Is it ours?
-    if ps -p "$RUNNING_PID" -o comm= 2>/dev/null | grep -q "OfflineGeoLocator_executable"; then
+    # Match against the new process name (or old one just in case)
+    if ps -p "$RUNNING_PID" -o comm= 2>/dev/null | grep -Ei "OfflineGeoLocator|OfflineGeoSDOH"; then
         echo "Updating: Replacing old server instance (PID $RUNNING_PID)..."
         kill -9 "$RUNNING_PID" 2>/dev/null
         sleep 1
@@ -61,7 +79,7 @@ done
 
 # Check if server started successfully
 if ! lsof -Pi :5002 -sTCP:LISTEN -t >/dev/null 2>&1; then
-    osascript -e 'display dialog "Failed to start OfflineGeoLocator server.\n\nCheck /tmp/offlinegeolocator.log for errors." buttons {"OK"} default button "OK" with title "OfflineGeoLocator Error" with icon stop'
+    osascript -e 'display dialog "Failed to start Offline GEO-SDOH server.\n\nCheck /tmp/offlinegeolocator.log for errors." buttons {"OK"} default button "OK" with title "Offline GEO-SDOH Error" with icon stop'
     exit 1
 fi
 
@@ -69,7 +87,7 @@ fi
 open "http://localhost:5002"
 
 # Show a notification
-osascript -e 'display notification "OfflineGeoLocator is running at http://localhost:5002" with title "OfflineGeoLocator Started"'
+osascript -e 'display notification "Offline GEO-SDOH is running at http://localhost:5002" with title "Offline GEO-SDOH Started"'
 
 # Keep the script running so the app stays in the Dock
 # When user quits from Dock, this will terminate and clean up the server

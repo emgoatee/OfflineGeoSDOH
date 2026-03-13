@@ -233,6 +233,8 @@ def latlon_to_geoid(lon, lat, gdfs, state_abbr=None):
 
 # ----------- Lookup functions (try FIPS of 11, 10, 9 digits)
 def lookup_any_fips(fips, df, fips_col="FIPS"):
+    if df.empty or fips_col not in df.columns:
+        return None
     fips_list = [fips[:11].zfill(11), fips[:10].zfill(10), fips[:9].zfill(9)]
     for f in fips_list:
         row = df[df[fips_col] == f]
@@ -261,11 +263,13 @@ def lookup_svi(tract_fips, df):
 
 def lookup_adi(tract_fips, df):
     # ADI is usually 12-digit Block Group. If we have 11-digit Tract, search by prefix.
+    if df.empty or "FIPS" not in df.columns:
+        return None
     tract_fips = str(tract_fips).zfill(11)
-    
+
     # Try exact match first (in case we ever get 12-digit input)
     data = lookup_any_fips(tract_fips, df, "FIPS")
-    
+
     if not data:
         # Search for any block group starting with this tract FIPS
         row = df[df["FIPS"].str.startswith(tract_fips)]
